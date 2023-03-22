@@ -6,6 +6,7 @@ import lombok.ToString;
 
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.util.List;
 
 @Entity
 @Table(name = "tbl_certificate")
@@ -20,19 +21,11 @@ public class Certificate extends BaseObject {
 //    private LocalDate startDate;
 //    @Column(name = "end_date", nullable = true)
 //    private LocalDate endDate;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "province_id")
+
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private Province province;
-
-    public Province getProvince() {
-        return province;
-    }
-
-    public void setProvince(Province province) {
-        this.province = province;
-    }
+    @OneToMany(mappedBy = "certificate", cascade = CascadeType.ALL)
+    private List<EmployeeCertificate> employeeCertificates;
 
     public String getName() {
         return name;

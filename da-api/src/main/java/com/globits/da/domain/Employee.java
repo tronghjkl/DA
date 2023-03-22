@@ -6,6 +6,7 @@ import lombok.ToString;
 
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.util.List;
 
 @Entity
 @Table(name = "tbl_employee")
@@ -41,24 +42,18 @@ public class Employee extends BaseObject {
     @ToString.Exclude
     private Ward ward;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "certificate_id")
-//    @EqualsAndHashCode.Exclude
-//    @ToString.Exclude
-//    private Certificate certificate;
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL)
+    private List<EmployeeCertificate> employeeCertificates;
 
-//    public Set<Certificate> getCertificates() {
-//        return certificates;
-//    }
-//
-//    public void setCertificates(Set<Certificate> certificates) {
-//        this.certificates = certificates;
-//    }
-//
-//    @ManyToMany(mappedBy = "employees")
-//    private Set<Certificate> certificates = new HashSet<>();
+    public List<EmployeeCertificate> getEmployeeCertificate() {
+        return employeeCertificates;
+    }
 
-
+    public void setEmployeeCertificate(List<EmployeeCertificate> employeeCertificates) {
+        this.employeeCertificates = employeeCertificates;
+    }
 
     public Province getProvince() {
         return province;

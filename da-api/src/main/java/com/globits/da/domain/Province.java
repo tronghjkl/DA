@@ -39,14 +39,14 @@ public class Province extends BaseObject {
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     @OneToMany(mappedBy = "province", cascade = CascadeType.ALL)
-    private List<Certificate> certificates;
+    private List<EmployeeCertificate> employeeCertificates;
 
-    public List<Certificate> getCertificates() {
-        return certificates;
+    public List<EmployeeCertificate> getEmployeeCertificates() {
+        return employeeCertificates;
     }
 
-    public void setCertificates(List<Certificate> certificates) {
-        this.certificates = certificates;
+    public void setEmployeeCertificates(List<EmployeeCertificate> employeeCertificates) {
+        this.employeeCertificates = employeeCertificates;
     }
 
     public List<Employee> getEmployees() {
