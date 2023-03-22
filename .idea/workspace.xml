@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="3f133e51-fa45-48db-b236-fbe559169996" name="Changes" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CodeInsightWorkspaceSettings">
+    <option name="optimizeImportsOnTheFly" value="true" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Interface" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="JpbToolWindowState">
+    <option name="isToolWindowVisible" value="false" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="localRepository" value="C:\Users\Admin\.m2\repository" />
+        <option name="useMavenConfig" value="true" />
+        <option name="userSettingsFile" value="C:\Users\Admin\.m2\settings.xml" />
+      </MavenGeneralSettings>
+    </option>
+    <option name="enabledProfiles">
+      <list>
+        <option value="normal-maven-build" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectId" id="2MchYo1Vv43zqJRcrQ3raOWFuld" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "last_opened_file_path": "C:/Users/Admin/Downloads/New folder2",
+    "nodejs_package_manager_path": "yarn",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.0",
+    "settings.editor.selected.configurable": "vcs.Git",
+    "spring.configuration.checksum": "baea5485658db36a0f750d1512fb41ac"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\Java\ThucTapLevel2\META-INF\core-v2-api\1.0.0-SNAPSHOT\core-v2-api-1.0.0-20211024.172044-124.jar!\META-INF" />
+      <recent name="D:\Java\ThucTapLevel2\META-INF\core-v2-api\1.0.0-SNAPSHOT" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="DAApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+      <module name="da-app" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.globits.DAApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="SvnConfiguration" cleanupOnStartRun="true">
+    <configuration>C:\Users\Admin\AppData\Roaming\Subversion</configuration>
+    <supportedVersion>125</supportedVersion>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="3f133e51-fa45-48db-b236-fbe559169996" name="Changes" comment="" />
+      <created>1678072827537</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1678072827537</updated>
+      <workItem from="1678072828778" duration="1234000" />
+      <workItem from="1678074103519" duration="14334000" />
+      <workItem from="1678121220423" duration="642000" />
+      <workItem from="1678154297051" duration="1083000" />
+      <workItem from="1678171945412" duration="315000" />
+      <workItem from="1678327677304" duration="3123000" />
+      <workItem from="1678345895126" duration="10643000" />
+      <workItem from="1678375121876" duration="14000" />
+      <workItem from="1678544848451" duration="1470000" />
+      <workItem from="1678592169512" duration="8968000" />
+      <workItem from="1678628943545" duration="1299000" />
+      <workItem from="1678632578729" duration="848000" />
+      <workItem from="1678633441590" duration="1444000" />
+      <workItem from="1678634963033" duration="928000" />
+      <workItem from="1678694891978" duration="4443000" />
+      <workItem from="1678760776714" duration="21485000" />
+      <workItem from="1678787346937" duration="3673000" />
+      <workItem from="1678804897594" duration="4473000" />
+      <workItem from="1678848581464" duration="4672000" />
+      <workItem from="1678863263948" duration="10530000" />
+      <workItem from="1678894699528" duration="2822000" />
+      <workItem from="1678930280506" duration="9907000" />
+      <workItem from="1678948046783" duration="15269000" />
+      <workItem from="1678979122126" duration="749000" />
+      <workItem from="1679024642620" duration="9798000" />
+      <workItem from="1679156348413" duration="601000" />
+      <workItem from="1679237517316" duration="3857000" />
+      <workItem from="1679295826363" duration="12732000" />
+      <workItem from="1679328421137" duration="1485000" />
+      <workItem from="1679367842302" duration="5867000" />
+      <workItem from="1679381138137" duration="10702000" />
+      <workItem from="1679391944339" duration="256000" />
+      <workItem from="1679392307393" duration="3422000" />
+      <workItem from="1679454143360" duration="1277000" />
+      <workItem from="1679466774937" duration="3382000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/da-api/src/main/java/com/globits/da/rest/RestProvinceController.java</url>
+          <line>25</line>
+          <option name="timeStamp" value="11" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/da-api/src/main/java/com/globits/da/service/impl/ProvinceServiceImpl.java</url>
+          <line>108</line>
+          <option name="timeStamp" value="21" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/da-api/src/main/java/com/globits/da/service/impl/ProvinceServiceImpl.java</url>
+          <line>136</line>
+          <option name="timeStamp" value="22" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/da-api/src/main/java/com/globits/da/service/impl/ProvinceServiceImpl.java</url>
+          <line>133</line>
+          <option name="timeStamp" value="24" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/da-api/src/main/java/com/globits/da/rest/RestWardController.java</url>
+          <line>48</line>
+          <option name="timeStamp" value="27" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/da-api/src/main/java/com/globits/da/service/impl/WardServiceImpl.java</url>
+          <line>73</line>
+          <option name="timeStamp" value="28" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/da-api/src/main/java/com/globits/da/rest/RestCertificateController.java</url>
+          <line>41</line>
+          <option name="timeStamp" value="29" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/da-api/src/main/java/com/globits/da/service/impl/CertificateServiceImpl.java</url>
+          <line>33</line>
+          <option name="timeStamp" value="31" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/da-api/src/main/java/com/globits/da/rest/RestWardController.java</url>
+          <line>41</line>
+          <option name="timeStamp" value="32" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/da-api/src/main/java/com/globits/da/service/impl/WardServiceImpl.java</url>
+          <line>33</line>
+          <option name="timeStamp" value="34" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/da-api/src/main/java/com/globits/da/service/impl/WardServiceImpl.java</url>
+          <line>39</line>
+          <option name="timeStamp" value="35" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/da-api/src/main/java/com/globits/da/service/impl/WardServiceImpl.java</url>
+          <line>34</line>
+          <option name="timeStamp" value="36" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/da-api/src/main/java/com/globits/da/service/impl/ProvinceServiceImpl.java</url>
+          <line>40</line>
+          <option name="timeStamp" value="42" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/da-api/src/main/java/com/globits/da/service/impl/ProvinceServiceImpl.java</url>
+          <line>69</line>
+          <option name="timeStamp" value="43" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/da-api/src/main/java/com/globits/da/service/impl/ProvinceServiceImpl.java</url>
+          <line>75</line>
+          <option name="timeStamp" value="44" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/da-api/src/main/java/com/globits/da/rest/RestProvinceController.java</url>
+          <line>46</line>
+          <option name="timeStamp" value="47" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/da-api/src/main/java/com/globits/da/service/impl/ProvinceServiceImpl.java</url>
+          <line>173</line>
+          <option name="timeStamp" value="48" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/da-api/src/main/java/com/globits/da/service/impl/ProvinceServiceImpl.java</url>
+          <line>192</line>
+          <option name="timeStamp" value="49" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/da-api/src/main/java/com/globits/da/service/impl/DistrictServiceImpl.java</url>
+          <line>200</line>
+          <option name="timeStamp" value="50" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/da-api/src/main/java/com/globits/da/rest/RestDistrictController.java</url>
+          <line>48</line>
+          <option name="timeStamp" value="51" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/da-api/src/main/java/com/globits/da/service/impl/DistrictServiceImpl.java</url>
+          <line>46</line>
+          <option name="timeStamp" value="52" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/da-api/src/main/java/com/globits/da/rest/RestProvinceController.java</url>
+          <line>67</line>
+          <option name="timeStamp" value="53" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/da-api/src/main/java/com/globits/da/service/impl/ProvinceServiceImpl.java</url>
+          <line>222</line>
+          <option name="timeStamp" value="54" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/da-api/src/main/java/com/globits/da/rest/RestEmployeeController.java</url>
+          <line>83</line>
+          <option name="timeStamp" value="55" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/da-api/src/main/java/com/globits/da/service/impl/EmployeeServiceIpml.java</url>
+          <line>169</line>
+          <option name="timeStamp" value="62" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/da-api/src/main/java/com/globits/da/service/impl/EmployeeServiceIpml.java</url>
+          <line>221</line>
+          <option name="timeStamp" value="66" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+    <pin-to-top-manager>
+      <pinned-members>
+        <PinnedItemInfo parentTag="com.globits.da.domain.Category" memberName="voided" />
+        <PinnedItemInfo parentTag="com.sun.proxy.$Proxy167" memberName="h" />
+      </pinned-members>
+    </pin-to-top-manager>
+  </component>
+</project>
