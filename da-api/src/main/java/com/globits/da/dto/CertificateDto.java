@@ -3,6 +3,8 @@ package com.globits.da.dto;
 import com.globits.core.dto.BaseObjectDto;
 import com.globits.da.domain.Certificate;
 
+import java.util.UUID;
+
 public class CertificateDto extends BaseObjectDto {
 
     private String name;
@@ -12,6 +14,16 @@ public class CertificateDto extends BaseObjectDto {
 //    private LocalDate startDate;
 //
 //    private LocalDate endDate;
+
+    private UUID provinceId;
+
+    public UUID getProvinceId() {
+        return provinceId;
+    }
+
+    public void setProvinceId(UUID provinceId) {
+        this.provinceId = provinceId;
+    }
 
     public String getName() {
         return name;

@@ -41,11 +41,24 @@ public class Employee extends BaseObject {
     @ToString.Exclude
     private Ward ward;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "certificate_id")
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    private Certificate certificate;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "certificate_id")
+//    @EqualsAndHashCode.Exclude
+//    @ToString.Exclude
+//    private Certificate certificate;
+
+//    public Set<Certificate> getCertificates() {
+//        return certificates;
+//    }
+//
+//    public void setCertificates(Set<Certificate> certificates) {
+//        this.certificates = certificates;
+//    }
+//
+//    @ManyToMany(mappedBy = "employees")
+//    private Set<Certificate> certificates = new HashSet<>();
+
+
 
     public Province getProvince() {
         return province;

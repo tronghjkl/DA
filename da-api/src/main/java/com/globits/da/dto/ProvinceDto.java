@@ -23,6 +23,16 @@ public class ProvinceDto extends BaseObjectDto {
 
     private List<EmployeeDTO> employeeDTOS;
 
+    private List<CertificateDto> certificateDtos;
+
+    public List<CertificateDto> getCertificateDtos() {
+        return certificateDtos;
+    }
+
+    public void setCertificateDtos(List<CertificateDto> certificateDtos) {
+        this.certificateDtos = certificateDtos;
+    }
+
     public List<EmployeeDTO> getEmployeeDTOS() {
         return employeeDTOS;
     }
