@@ -102,9 +102,11 @@ public class EmployeeDTO extends BaseObjectDto {
             this.email = employee.getEmail();
             this.phone = employee.getPhone();
             this.age = employee.getAge();
-            this.provinceId = employee.getProvince().getId();
-            this.districtId = employee.getDistrict().getId();
-            this.wardId = employee.getWard().getId();
+            if (employee.getProvince() != null && employee.getDistrict() != null && employee.getWard() != null) {
+                this.provinceId = employee.getProvince().getId();
+                this.districtId = employee.getDistrict().getId();
+                this.wardId = employee.getWard().getId();
+            }
         }
     }
 

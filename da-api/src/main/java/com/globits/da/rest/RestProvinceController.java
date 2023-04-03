@@ -3,6 +3,7 @@ package com.globits.da.rest;
 import com.globits.da.AFFakeConstants;
 import com.globits.da.dto.ProvinceDto;
 import com.globits.da.dto.search.ProvinceSearchDto;
+import com.globits.da.domain.baseObject.ResponObject;
 import com.globits.da.service.ProvinceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -21,52 +22,48 @@ public class RestProvinceController {
     ProvinceService provinceService;
 
     @Secured({AFFakeConstants.ROLE_ADMIN, AFFakeConstants.ROLE_SUPER_ADMIN})
-    @RequestMapping(value = "/addProvince", method = RequestMethod.POST)
+    @RequestMapping(value = "/add-province", method = RequestMethod.POST)
     public ResponseEntity<ProvinceDto> save(@RequestBody ProvinceDto provinceDto) {
         ProvinceDto result = provinceService.saveOrUpdate(null, provinceDto);
         return new ResponseEntity<ProvinceDto>(result, HttpStatus.OK);
     }
 
     @Secured({AFFakeConstants.ROLE_ADMIN, AFFakeConstants.ROLE_SUPER_ADMIN})
-    @RequestMapping(value = "/addProvince/{id}", method = RequestMethod.POST)
+    @RequestMapping(value = "/add-province/{id}", method = RequestMethod.POST)
     public ResponseEntity<ProvinceDto> save(@RequestBody ProvinceDto provinceDto, @PathVariable UUID id) {
         ProvinceDto result = provinceService.saveOrUpdate(id, provinceDto);
         return new ResponseEntity<ProvinceDto>(result, HttpStatus.OK);
     }
 
     @Secured({AFFakeConstants.ROLE_ADMIN, AFFakeConstants.ROLE_SUPER_ADMIN})
-    @RequestMapping(value = "/getAllProvince", method = RequestMethod.GET)
+    @RequestMapping(value = "/get-all-province", method = RequestMethod.GET)
     public ResponseEntity<List<ProvinceDto>> getALlProvince() {
         List<ProvinceDto> resutl = provinceService.getAllProvince();
         return new ResponseEntity<List<ProvinceDto>>(resutl, HttpStatus.OK);
     }
 
     @Secured({AFFakeConstants.ROLE_ADMIN, AFFakeConstants.ROLE_SUPER_ADMIN})
-    @RequestMapping(value = "/addProvince/{id}", method = RequestMethod.PUT)
-    public ResponseEntity<ProvinceDto> update(@RequestBody ProvinceDto provinceDto, @PathVariable UUID id) {
-        ProvinceDto result = provinceService.update(id, provinceDto);
-        return new ResponseEntity<ProvinceDto>(result, HttpStatus.OK);
+    @RequestMapping(value = "/search-province", method = RequestMethod.POST)
+    public ResponObject<Page<ProvinceDto>> searchProvince(@RequestBody ProvinceSearchDto provinceSearchDto) {
+        return this.provinceService.searchByPage(provinceSearchDto);
     }
 
     @Secured({AFFakeConstants.ROLE_ADMIN, AFFakeConstants.ROLE_SUPER_ADMIN})
-    @RequestMapping(value = "/searchProvince", method = RequestMethod.POST)
-    public ResponseEntity<Page<ProvinceDto>> searchProvince(@RequestBody ProvinceSearchDto provinceSearchDto) {
-        Page<ProvinceDto> page = this.provinceService.searchByPage(provinceSearchDto);
-        return new ResponseEntity<Page<ProvinceDto>>(page, HttpStatus.OK);
+    @RequestMapping(value = "/delete-province", method = RequestMethod.DELETE)
+    public ResponObject<Boolean> deleteProvince(@RequestParam UUID id) {
+        return provinceService.deleteKho(id);
     }
 
     @Secured({AFFakeConstants.ROLE_ADMIN, AFFakeConstants.ROLE_SUPER_ADMIN})
-    @RequestMapping(value = "/deleteProvince", method = RequestMethod.DELETE)
-    public ResponseEntity<Boolean> deleteProvince(@RequestParam UUID id) {
-        Boolean result = provinceService.deleteKho(id);
-        return new ResponseEntity<Boolean>(result, HttpStatus.OK);
+    @RequestMapping(value = "/add-province2", method = RequestMethod.POST)
+    public ResponObject<ProvinceDto> save2(@RequestBody ProvinceDto provinceDto) {
+        return provinceService.addProvince(null, provinceDto);
     }
 
     @Secured({AFFakeConstants.ROLE_ADMIN, AFFakeConstants.ROLE_SUPER_ADMIN})
-    @RequestMapping(value = "/addProvince2", method = RequestMethod.POST)
-    public ResponseEntity<ProvinceDto> save2(@RequestBody ProvinceDto provinceDto) {
-        ProvinceDto result = provinceService.addProvince(null, provinceDto);
-        return new ResponseEntity<ProvinceDto>(result, HttpStatus.OK);
+    @RequestMapping(value = "/add-province/{id}", method = RequestMethod.PUT)
+    public ResponObject<ProvinceDto> update(@RequestBody ProvinceDto provinceDto, @PathVariable UUID id) {
+        return  provinceService.updateProvince(id, provinceDto);
     }
 
 }

@@ -3,6 +3,7 @@ package com.globits.da.service;
 import com.globits.core.service.GenericService;
 import com.globits.da.domain.EmployeeCertificate;
 import com.globits.da.dto.EmployeeCertificateDto;
+import com.globits.da.domain.baseObject.ResponObject;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +14,7 @@ import java.util.UUID;
 public interface EmployeeCertificateService extends GenericService<EmployeeCertificate, UUID> {
     public Page<EmployeeCertificateDto> getPage(int pageSize, int pageIndex);
 
-    public EmployeeCertificateDto saveOrUpdate(UUID id, EmployeeCertificateDto dto);
+    public ResponObject<EmployeeCertificateDto> save(EmployeeCertificateDto dto);
 
     public Boolean deleteKho(UUID id);
 

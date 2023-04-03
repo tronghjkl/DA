@@ -8,9 +8,13 @@ import com.globits.da.dto.DistrictDto;
 import com.globits.da.dto.ProvinceDto;
 import com.globits.da.dto.WardDto;
 import com.globits.da.dto.search.ProvinceSearchDto;
+import com.globits.da.domain.baseObject.ResponObject;
 import com.globits.da.repository.DistrictReponsitory;
 import com.globits.da.repository.ProvinceReponsitory;
 import com.globits.da.service.ProvinceService;
+import org.apache.commons.collections4.CollectionUtils;
+import org.modelmapper.Conditions;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -31,6 +35,7 @@ public class ProvinceServiceImpl extends GenericServiceImpl<Province, UUID> impl
     @Autowired
     DistrictReponsitory districtReponsitory;
 
+
     @Override
     public Page<ProvinceDto> getPage(int pageSize, int pageIndex) {
         return null;
@@ -49,7 +54,6 @@ public class ProvinceServiceImpl extends GenericServiceImpl<Province, UUID> impl
             }
             if (entity == null) {
                 entity = new Province();
-//                entity.setDistricts(new ArrayList<>());
             }
 
             entity.setCode(dto.getCode());
@@ -58,27 +62,22 @@ public class ProvinceServiceImpl extends GenericServiceImpl<Province, UUID> impl
             entity.setPopulation(dto.getPopulation());
             entity.setGDP(dto.getGdp());
 
-//            List<District> districts = dto.getDistricts();
-//            for (District district : districts) {
-//                district = districtReponsitory.save(district);
-//                district.setProvince(entity);
-//                entity.getDistricts().add(district);
-//            }
+            if (dto.getDistricts() != null) {
+                List<District> districts = new ArrayList<>();
+                for (DistrictDto districtDto : dto.getDistricts()) {
+                    District district = new District();
+                    district.setName(districtDto.getName());
+                    district.setCode(districtDto.getCode());
+                    district.setArea(districtDto.getArea());
+                    district.setPopulation(districtDto.getPopulation());
+                    district.setGDP(districtDto.getGDP());
+                    district.setProvince(entity);
 
-            List<District> districts = new ArrayList<>();
-            for (DistrictDto districtDto : dto.getDistricts()) {
-                District district = new District();
-                district.setName(districtDto.getName());
-                district.setCode(districtDto.getCode());
-                district.setArea(districtDto.getArea());
-                district.setPopulation(districtDto.getPopulation());
-                district.setGDP(districtDto.getGDP());
-                district.setProvince(entity);
-
-                districts.add(district);
+                    districts.add(district);
+                }
+                entity.setDistricts(districts);
             }
 
-            entity.setDistricts(districts);
 
             entity = reponsitory.save(entity);
             if (entity != null) {
@@ -90,12 +89,12 @@ public class ProvinceServiceImpl extends GenericServiceImpl<Province, UUID> impl
 
 
     @Override
-    public Boolean deleteKho(UUID id) {
+    public ResponObject<Boolean> deleteKho(UUID id) {
         if (id != null) {
             reponsitory.deleteById(id);
-            return true;
+            return new ResponObject<>(true);
         }
-        return false;
+        return new ResponObject<Boolean>(false);
     }
 
 
@@ -105,9 +104,9 @@ public class ProvinceServiceImpl extends GenericServiceImpl<Province, UUID> impl
     }
 
     @Override
-    public Page<ProvinceDto> searchByPage(ProvinceSearchDto dto) {
+    public ResponObject<Page<ProvinceDto>> searchByPage(ProvinceSearchDto dto) {
         if (dto == null) {
-            return null;
+            return new ResponObject<>("Province search is blank", "BAD REQUEST", 400);
         }
 
         int pageIndex = dto.getPageIndex();
@@ -149,8 +148,8 @@ public class ProvinceServiceImpl extends GenericServiceImpl<Province, UUID> impl
         long count = (long) qCount.getSingleResult();
 
         Pageable pageable = PageRequest.of(pageIndex, pageSize);
-        Page<ProvinceDto> result = new PageImpl<ProvinceDto>(entities, pageable, count);
-        return result;
+        Page<ProvinceDto> result = new PageImpl<>(entities, pageable, count);
+        return new ResponObject<>("Successfully", "OK", 200, result);
     }
 
     @Override
@@ -160,8 +159,7 @@ public class ProvinceServiceImpl extends GenericServiceImpl<Province, UUID> impl
 
     @Override
     public List<ProvinceDto> getAllProvince() {
-        List<ProvinceDto> provinceDtoList = reponsitory.getAllProvince();
-        return provinceDtoList;
+        return reponsitory.getAllProvince();
     }
 
     @Override
@@ -170,55 +168,39 @@ public class ProvinceServiceImpl extends GenericServiceImpl<Province, UUID> impl
     }
 
     @Override
-    public ProvinceDto update(UUID id, ProvinceDto dto) {
+    public ResponObject<ProvinceDto> updateProvince(UUID id, ProvinceDto dto) {
         if (dto != null) {
-            Province entity = null;
-            if (dto.getId() != null) {
-                if (dto.getId() != null && !dto.getId().equals(id)) {
-                    return null;
-                }
-                entity = reponsitory.findById(id).get();
-            }
+            Province entity = reponsitory.findById(id).orElse(null);
             if (entity == null) {
-                entity = new Province();
-                entity.setDistricts(new ArrayList<>());
+                return new ResponObject<>("ProvinceId is blank", "Bad Request", 400);
             }
 
-            entity.setCode(dto.getCode());
-            entity.setName(dto.getName());
-            entity.setArea(dto.getArea());
-            entity.setPopulation(dto.getPopulation());
-            entity.setGDP(dto.getGdp());
+            ModelMapper modelMapper = new ModelMapper();
+            modelMapper.getConfiguration().setPropertyCondition(Conditions.isNotNull());
+            modelMapper.map(dto, entity);
 
-//            List<DistrictDto> districtDtoList = districtReponsitory.getDistrictsByProvinceId(id);
-            List<DistrictDto> districtDtoList = dto.getDistricts();
-            List<District> districts = new ArrayList<>();
+            if (!dto.getDistricts().isEmpty()) {
+                List<DistrictDto> districtDtoList = dto.getDistricts();
+                List<District> districts = new ArrayList<>();
 
-            for (DistrictDto districtDto : districtDtoList) {
-                District district = districtReponsitory.findById(districtDto.getId()).get();
-                district.setCode(districtDto.getCode());
-                district.setName(districtDto.getName());
-                district.setPopulation(districtDto.getPopulation());
-                district.setArea(districtDto.getArea());
-                district.setGDP(districtDto.getGDP());
-
-                districts.add(district);
-
+                for (DistrictDto districtDto : districtDtoList) {
+                    District district = districtReponsitory.findById(districtDto.getId()).orElse(null);
+                    modelMapper.map(districtDto, district);
+                    districts.add(district);
+                }
+                entity.setDistricts(districts);
             }
-
-            entity.setDistricts(districts);
             reponsitory.save(entity);
 
             if (entity != null) {
-                return new ProvinceDto(entity);
+                return new ResponObject<>("Update Successfuly", "OK", 200, dto);
             }
         }
-
-        return null;
+        return new ResponObject<>("ProvinceDto is blank", "Bad Request", 400);
     }
 
     @Override
-    public ProvinceDto addProvince(UUID id, ProvinceDto dto) {
+    public ResponObject<ProvinceDto> addProvince(UUID id, ProvinceDto dto) {
 
         if (dto != null) {
             Province entity = null;
@@ -231,76 +213,50 @@ public class ProvinceServiceImpl extends GenericServiceImpl<Province, UUID> impl
             }
             if (entity == null) {
                 entity = new Province();
-//                entity.setDistricts(new ArrayList<>());
             }
-
             entity.setCode(dto.getCode());
             entity.setName(dto.getName());
             entity.setArea(dto.getArea());
             entity.setPopulation(dto.getPopulation());
             entity.setGDP(dto.getGdp());
 
+            if (CollectionUtils.isNotEmpty(dto.getDistricts())) {
 
-            List<District> districts = new ArrayList<>();
+                List<District> districts = new ArrayList<>();
 
-            for (DistrictDto districtDto : dto.getDistricts()) {
-                District district = new District();
-                district.setName(districtDto.getName());
-                district.setCode(districtDto.getCode());
-                district.setArea(districtDto.getArea());
-                district.setPopulation(districtDto.getPopulation());
-                district.setGDP(districtDto.getGDP());
-                district.setProvince(entity);
-                districts.add(district);
-//                district.setWards(new ArrayList<>());
+                for (DistrictDto districtDto : dto.getDistricts()) {
+                    District district = new District();
+                    district.setName(districtDto.getName());
+                    district.setCode(districtDto.getCode());
+                    district.setArea(districtDto.getArea());
+                    district.setPopulation(districtDto.getPopulation());
+                    district.setGDP(districtDto.getGDP());
+                    district.setProvince(entity);
+                    districts.add(district);
 
-                List<Ward> wards = new ArrayList<>();
-                for (WardDto wardDto : districtDto.getWards()) {
-                    Ward ward = new Ward();
-                    ward.setName(wardDto.getName());
-                    ward.setCode(wardDto.getCode());
-                    ward.setArea(wardDto.getArea());
-                    ward.setPopulation(wardDto.getPopulation());
-                    ward.setDistrict(district);
-                    wards.add(ward);
+                    if (CollectionUtils.isNotEmpty(districtDto.getWards())) {
+                        List<Ward> wards = new ArrayList<>();
+                        for (WardDto wardDto : districtDto.getWards()) {
+                            Ward ward = new Ward();
+                            ward.setName(wardDto.getName());
+                            ward.setCode(wardDto.getCode());
+                            ward.setArea(wardDto.getArea());
+                            ward.setPopulation(wardDto.getPopulation());
+                            ward.setDistrict(district);
+                            wards.add(ward);
+                        }
+                        district.setWards(wards);
+                    }
+
                 }
-                district.setWards(wards);
+                entity.setDistricts(districts);
             }
-            entity.setDistricts(districts);
             entity = reponsitory.save(entity);
             if (entity != null) {
-                return new ProvinceDto(entity);
+                return new ResponObject<>("Update Successfuly", "OK", 200, new ProvinceDto(entity));
             }
         }
-        return null;
+        return new ResponObject<>("ProvinceDto is blank", "Bad Request", 400);
     }
-
-
-//    @Transactional
-//    public void updateProvinceAndDistricts(ProvinceDto provinceDto, List<DistrictDto> districtDtos) {
-//
-//        Province province = reponsitory.findById(provinceDto.getId())
-//                .orElseThrow(() -> new EntityNotFoundException("Cannot find province with ID: " + provinceDto.getId()));
-//
-//        // Update province information
-//        province.setName(provinceDto.getName());
-//        province.setCode(provinceDto.getCode());
-//        province.setArea(provinceDto.getArea());
-//        province.setPopulation(provinceDto.getPopulation());
-//        province.setGDP(provinceDto.getGdp());
-//
-//        // Update districts information
-//        for (DistrictDto districtDto : districtDtos) {
-//            District district = districtReponsitory.findById(districtDto.getId())
-//                    .orElseThrow(() -> new EntityNotFoundException("Cannot find district with ID: " + districtDto.getId()));
-//            district.setName(districtDto.getName());
-//            district.setCode(districtDto.getCode());
-//            district.setArea(districtDto.getArea());
-//            district.setPopulation(districtDto.getPopulation());
-//            district.setGDP(districtDto.getGDP());
-//            districtReponsitory.save(district);
-//        }
-//        reponsitory.save(province);
-//    }
 
 }

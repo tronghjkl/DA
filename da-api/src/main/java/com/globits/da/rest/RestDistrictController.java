@@ -1,9 +1,10 @@
 package com.globits.da.rest;
 
 import com.globits.da.AFFakeConstants;
+import com.globits.da.domain.baseObject.ResponObject;
 import com.globits.da.dto.DistrictDto;
 import com.globits.da.dto.search.DistrictSearchDto;
-import com.globits.da.service.impl.DistrictServiceImpl;
+import com.globits.da.service.DistrictService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -20,62 +21,62 @@ import java.util.UUID;
 @XmlRootElement
 public class RestDistrictController {
     @Autowired
-    DistrictServiceImpl districtService;
+    DistrictService districtService;
 
     @Secured({AFFakeConstants.ROLE_ADMIN, AFFakeConstants.ROLE_SUPER_ADMIN})
-    @RequestMapping(value = "/getAllDistrict", method = RequestMethod.GET)
+    @RequestMapping(value = "/get-all-district", method = RequestMethod.GET)
     public ResponseEntity<List<DistrictDto>> getAllDistrict() {
         List<DistrictDto> result = districtService.getAllDistrict();
-        return new ResponseEntity<List<DistrictDto>>(result, HttpStatus.OK);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @Secured({AFFakeConstants.ROLE_ADMIN, AFFakeConstants.ROLE_SUPER_ADMIN})
-    @RequestMapping(value = "/addDistrict", method = RequestMethod.POST)
+    @RequestMapping(value = "/add-district", method = RequestMethod.POST)
     public ResponseEntity<DistrictDto> addDistrict(@RequestBody DistrictDto districtDto) {
         DistrictDto result = districtService.saveOrUpdate(null, districtDto);
-        return new ResponseEntity<DistrictDto>(result, HttpStatus.OK);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @Secured({AFFakeConstants.ROLE_ADMIN, AFFakeConstants.ROLE_SUPER_ADMIN})
-    @RequestMapping(value = "/addDistrict/{id}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/add-district/{id}", method = RequestMethod.PUT)
     public ResponseEntity<DistrictDto> updateDistrict(@RequestBody DistrictDto districtDto, @PathVariable UUID id) {
         DistrictDto result = districtService.saveOrUpdate(id, districtDto);
-        return new ResponseEntity<DistrictDto>(result, HttpStatus.OK);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @Secured({AFFakeConstants.ROLE_ADMIN, AFFakeConstants.ROLE_SUPER_ADMIN})
     @RequestMapping(value = "/update/{id}", method = RequestMethod.PUT)
     public ResponseEntity<DistrictDto> update(@RequestBody DistrictDto districtDto, @PathVariable UUID id) {
         DistrictDto result = districtService.update(id, districtDto);
-        return new ResponseEntity<DistrictDto>(result, HttpStatus.OK);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @Secured({AFFakeConstants.ROLE_ADMIN, AFFakeConstants.ROLE_SUPER_ADMIN})
-    @RequestMapping(value = "/searchDistrict", method = RequestMethod.POST)
+    @RequestMapping(value = "/search-district", method = RequestMethod.POST)
     public ResponseEntity<Page<DistrictDto>> searchDistrict(@RequestBody DistrictSearchDto districtSearchDto) {
         Page<DistrictDto> page = districtService.searchByPage(districtSearchDto);
         return new ResponseEntity<>(page, HttpStatus.OK);
     }
 
     @Secured({AFFakeConstants.ROLE_ADMIN, AFFakeConstants.ROLE_SUPER_ADMIN})
-    @RequestMapping(value = "/deleteDistrict/{id}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/delete-district/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<Boolean> delete(@PathVariable UUID id) {
         Boolean result = districtService.deleteKho(id);
-        return new ResponseEntity<Boolean>(result, HttpStatus.OK);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @Secured({AFFakeConstants.ROLE_ADMIN, AFFakeConstants.ROLE_SUPER_ADMIN})
-    @RequestMapping(value = "/addDistrict2", method = RequestMethod.POST)
-    public ResponseEntity<DistrictDto> addDistrict2(@RequestBody DistrictDto districtDto) {
-        DistrictDto result = districtService.saveOrUpdate2(null, districtDto);
-        return new ResponseEntity<DistrictDto>(result, HttpStatus.OK);
+    @RequestMapping(value = "/add-district2", method = RequestMethod.POST)
+    public ResponObject<DistrictDto> addDistrict2(@RequestBody DistrictDto districtDto) {
+        return districtService.saveOrUpdate2(null, districtDto);
     }
-//
-//    @Secured({AFFakeConstants.ROLE_ADMIN, AFFakeConstants.ROLE_SUPER_ADMIN})
-//    @RequestMapping(value = "/update", method = RequestMethod.PUT)
-//    public ResponseEntity<DistrictDto> updateDistrict2(@RequestBody DistrictDto districtDto, @PathVariable UUID id) {
-//        DistrictDto result = districtService.update(id, districtDto);
-//        return new ResponseEntity<DistrictDto>(result, HttpStatus.OK);
-//    }
+
+    @Secured({AFFakeConstants.ROLE_ADMIN, AFFakeConstants.ROLE_SUPER_ADMIN})
+    @RequestMapping(value = "/search-district-by-provinceId", method = RequestMethod.GET)
+    public ResponObject<List<DistrictDto>> addDistrict2(@RequestParam UUID provinceId) {
+        ResponObject result = districtService.getDistrictByProvinceId(provinceId);
+        return new ResponObject<>(result.getMessager(), result.getStatus(), result.getCode(), (List<DistrictDto>) result.getData());
+    }
+
 
 }

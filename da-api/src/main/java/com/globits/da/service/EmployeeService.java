@@ -2,7 +2,7 @@ package com.globits.da.service;
 
 import com.globits.da.dto.EmployeeDTO;
 import com.globits.da.dto.search.EmployeeSearchDTO;
-import com.globits.da.excel.ResponObject;
+import com.globits.da.domain.baseObject.ResponObject;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
@@ -26,4 +26,5 @@ public interface EmployeeService {
     public ResponObject<EmployeeDTO> addEmployee2(EmployeeDTO dto);
 
     public ResponObject<EmployeeDTO>update(UUID id, EmployeeDTO dto);
+
 }

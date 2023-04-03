@@ -3,6 +3,7 @@ package com.globits.da.dto;
 import com.globits.core.dto.BaseObjectDto;
 import com.globits.da.domain.District;
 import com.globits.da.domain.Province;
+import org.apache.commons.collections4.CollectionUtils;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -101,9 +102,10 @@ public class ProvinceDto extends BaseObjectDto {
             this.area = province.getArea();
             this.population = province.getPopulation();
             this.gdp = province.getGDP();
+
             // district
-            this.districts = new ArrayList<>();
-            if (province.getDistricts() != null) {
+            if (CollectionUtils.isNotEmpty(province.getDistricts())) {
+                this.districts = new ArrayList<>();
                 for (District district : province.getDistricts()) {
                     DistrictDto districtDto = new DistrictDto(district);
                     this.districts.add(districtDto);

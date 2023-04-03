@@ -6,6 +6,7 @@ import com.globits.da.domain.Employee;
 import com.globits.da.domain.EmployeeCertificate;
 import com.globits.da.domain.Province;
 import com.globits.da.dto.EmployeeCertificateDto;
+import com.globits.da.domain.baseObject.ResponObject;
 import com.globits.da.repository.CertificateReponsitory;
 import com.globits.da.repository.EmployeeCertifcateResponsitory;
 import com.globits.da.repository.EmployeeRepository;
@@ -23,7 +24,6 @@ import java.util.UUID;
 public class EmployeeCertificateServiceImpl extends GenericServiceImpl<EmployeeCertificate, UUID> implements EmployeeCertificateService {
     @Autowired
     EmployeeCertifcateResponsitory responsitory;
-
     @Autowired
     EmployeeRepository employeeRepository;
     @Autowired
@@ -37,42 +37,61 @@ public class EmployeeCertificateServiceImpl extends GenericServiceImpl<EmployeeC
     }
 
     @Override
-    public EmployeeCertificateDto saveOrUpdate(UUID id, EmployeeCertificateDto dto) {
-        if (dto != null) {
-            EmployeeCertificate entity = null;
-            if (dto.getId() != null) {
-                if (dto.getId() != null && !dto.getId().equals(id)) {
-                    return null;
-                }
-                entity = responsitory.getOne(dto.getId());
-            }
-            if (entity == null) {
-                entity = new EmployeeCertificate();
-            }
+    public ResponObject<EmployeeCertificateDto> save(EmployeeCertificateDto dto) {
 
-            LocalDate startDate = dto.getStartDate();
+        EmployeeCertificate entity = new EmployeeCertificate();
+
+        List<EmployeeCertificateDto> employeeCertificateDtoList = responsitory.checkCertificateProvince(dto.getEmployeeId(), dto.getProvinceId(), dto.getCertificateId());
+
+        List<EmployeeCertificateDto> employeeCertificateDtoList2 = responsitory.checkCertificate(dto.getEmployeeId(), dto.getCertificateId());
+
+        if (validateEmployeeCertificate(employeeCertificateDtoList) && validateCertificate(employeeCertificateDtoList2)) {
+            Employee employee = employeeRepository.findById(dto.getEmployeeId()).orElse(null);
+            Certificate certificate = certificateReponsitory.findById(dto.getCertificateId()).orElse(null);
+            Province province = provinceReponsitory.findById(dto.getProvinceId()).orElse(null);
+
+            entity.setEmployee(employee);
+            entity.setCertificate(certificate);
+            entity.setProvince(province);
+            entity.setStartDate(dto.getStartDate());
+            entity.setEndDate(dto.getEndDate());
+
+            entity = responsitory.save(entity);
+
+        } else return new ResponObject<EmployeeCertificateDto>("Add Failed", "BAD REQUEST", 400);
+
+        return new ResponObject<EmployeeCertificateDto>("Add successfuly", new EmployeeCertificateDto(entity));
+    }
+
+    //check still has time
+    public Boolean validateEmployeeCertificate(List<EmployeeCertificateDto> dtos) {
+        for (EmployeeCertificateDto dto : dtos) {
             LocalDate endDate = dto.getEndDate();
             int checkStillTime = endDate.compareTo(LocalDate.now());
+            if (checkStillTime > 0) {
+                return false;
+            }
+        }
+        return true;
+    }
 
-            if (responsitory.checkCertificate(dto.getEmployeeId(), dto.getProvinceId(), dto.getCertificateId()) && startDate != null && checkStillTime > 0) {
-                Employee employee = employeeRepository.findById(dto.getEmployeeId()).orElse(null);
-                Certificate certificate = certificateReponsitory.findById(dto.getCertificateId()).orElse(null);
-                Province province = provinceReponsitory.findById(dto.getProvinceId()).orElse(null);
+    // check certificate of the same type
+    public Boolean validateCertificate(List<EmployeeCertificateDto> dtos) {
+        int count = 0;
+        if (dtos.size() >= 3) {
+            for (EmployeeCertificateDto dto : dtos) {
+                LocalDate endDate = dto.getEndDate();
+                int checkStillTime = endDate.compareTo(LocalDate.now());
 
-                entity.setEmployee(employee);
-                entity.setCertificate(certificate);
-                entity.setProvince(province);
-                entity.setStartDate(dto.getStartDate());
-                entity.setEndDate(dto.getEndDate());
-
-                entity = responsitory.save(entity);
-                if (entity != null) {
-                    return new EmployeeCertificateDto(entity);
+                if (checkStillTime > 0) {
+                    count++;
+                }
+                if (count >= 3) {
+                    return false;
                 }
             }
-
         }
-        return null;
+        return true;
     }
 
     @Override

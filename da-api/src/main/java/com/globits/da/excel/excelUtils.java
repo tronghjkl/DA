@@ -10,8 +10,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
 
-public class EmployeeExcelExporter {
-    public void export(List<EmployeeDTO> employees, String fileName) throws IOException {
+public class excelUtils {
+    public void exportEmployee(List<EmployeeDTO> employees, String fileName) throws IOException {
         XSSFWorkbook workbook = new XSSFWorkbook();
         XSSFSheet sheet = workbook.createSheet("employees");
 
@@ -41,4 +41,6 @@ public class EmployeeExcelExporter {
         workbook.write(outputStream);
         workbook.close();
     }
+
+
 }

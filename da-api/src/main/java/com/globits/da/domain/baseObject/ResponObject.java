@@ -1,4 +1,4 @@
-package com.globits.da.excel;
+package com.globits.da.domain.baseObject;
 
 import com.globits.da.dto.EmployeeDTO;
 
@@ -25,6 +25,13 @@ public class ResponObject<T> {
         this.messager = messager;
         this.status = status;
         this.code = code;
+    }
+
+    public ResponObject(String messager, String status, int code, T data) {
+        this.messager = messager;
+        this.status = status;
+        this.code = code;
+        this.data = data;
     }
 
     public ResponObject(Boolean isValid, String messager) {

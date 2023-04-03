@@ -1,13 +1,12 @@
 package com.globits.da.rest;
 
 import com.globits.da.AFFakeConstants;
+import com.globits.da.domain.baseObject.ResponObject;
 import com.globits.da.dto.CertificateDto;
 import com.globits.da.dto.search.CertificateSearchDto;
 import com.globits.da.service.impl.CertificateServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,37 +22,32 @@ public class RestCertificateController {
     CertificateServiceImpl certificateService;
 
     @Secured({AFFakeConstants.ROLE_ADMIN, AFFakeConstants.ROLE_SUPER_ADMIN})
-    @RequestMapping(value = "/getAllCertificate", method = RequestMethod.GET)
-    public ResponseEntity<List<CertificateDto>> getAllCertificate() {
-        List<CertificateDto> result = certificateService.getAllCertificate();
-        return new ResponseEntity<List<CertificateDto>>(result, HttpStatus.OK);
+    @RequestMapping(value = "/get-all-certificate", method = RequestMethod.GET)
+    public ResponObject<List<CertificateDto>> getAllCertificate() {
+        return certificateService.getAllCertificate();
     }
 
     @Secured({AFFakeConstants.ROLE_ADMIN, AFFakeConstants.ROLE_SUPER_ADMIN})
-    @RequestMapping(value = "/addCertificate", method = RequestMethod.POST)
-    public ResponseEntity<CertificateDto> addCertificate(@RequestBody CertificateDto certificateDto) {
-        CertificateDto result = certificateService.saveOrUpdate(null, certificateDto);
-        return new ResponseEntity<CertificateDto>(result, HttpStatus.OK);
+    @RequestMapping(value = "/add-certicate", method = RequestMethod.POST)
+    public ResponObject<CertificateDto> addCertificate(@RequestBody CertificateDto certificateDto) {
+        return certificateService.saveOrUpdate(null, certificateDto);
     }
 
     @Secured({AFFakeConstants.ROLE_ADMIN, AFFakeConstants.ROLE_SUPER_ADMIN})
-    @RequestMapping(value = "/addCertificate/{id}", method = RequestMethod.PUT)
-    public ResponseEntity<CertificateDto> updateCertificate(@RequestBody CertificateDto certificateDto, @PathVariable UUID id) {
-        CertificateDto result = certificateService.saveOrUpdate(id, certificateDto);
-        return new ResponseEntity<CertificateDto>(result, HttpStatus.OK);
+    @RequestMapping(value = "/add-certificate/{id}", method = RequestMethod.PUT)
+    public ResponObject<CertificateDto> updateCertificate(@RequestBody CertificateDto certificateDto, @PathVariable UUID id) {
+        return certificateService.saveOrUpdate(id, certificateDto);
     }
 
     @Secured({AFFakeConstants.ROLE_ADMIN, AFFakeConstants.ROLE_SUPER_ADMIN})
-    @RequestMapping(value = "/searchCertificate", method = RequestMethod.POST)
-    public ResponseEntity<Page<CertificateDto>> searchCertificate(@RequestBody CertificateSearchDto certificateSearchDto) {
-        Page<CertificateDto> page = certificateService.searchByPage(certificateSearchDto);
-        return new ResponseEntity<>(page, HttpStatus.OK);
+    @RequestMapping(value = "/search-certidicate", method = RequestMethod.POST)
+    public ResponObject<Page<CertificateDto>> searchCertificate(@RequestBody CertificateSearchDto certificateSearchDto) {
+        return certificateService.searchByPage(certificateSearchDto);
     }
 
     @Secured({AFFakeConstants.ROLE_ADMIN, AFFakeConstants.ROLE_SUPER_ADMIN})
-    @RequestMapping(value = "/deleteCertificate/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity<Boolean> delete(@PathVariable UUID id) {
-        Boolean result = certificateService.deleteKho(id);
-        return new ResponseEntity<Boolean>(result, HttpStatus.OK);
+    @RequestMapping(value = "/delete-certificate/{id}", method = RequestMethod.DELETE)
+    public ResponObject<Boolean> delete(@PathVariable UUID id) {
+        return certificateService.deleteKho(id);
     }
 }

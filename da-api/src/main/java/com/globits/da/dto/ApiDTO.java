@@ -1,11 +1,9 @@
 package com.globits.da.dto;
 
-import com.globits.core.dto.BaseObjectDto;
-
 public class ApiDTO {
-    String code;
-    String name;
-    int age;
+    private String code;
+    private String name;
+    private int age;
 
     public String getCode() {
         return code;

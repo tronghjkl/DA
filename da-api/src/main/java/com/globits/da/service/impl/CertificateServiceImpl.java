@@ -4,6 +4,7 @@ import com.globits.core.service.impl.GenericServiceImpl;
 import com.globits.da.domain.Certificate;
 import com.globits.da.dto.CertificateDto;
 import com.globits.da.dto.search.CertificateSearchDto;
+import com.globits.da.domain.baseObject.ResponObject;
 import com.globits.da.repository.CertificateReponsitory;
 import com.globits.da.service.CertificateService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +31,7 @@ public class CertificateServiceImpl extends GenericServiceImpl<Certificate, UUID
     }
 
     @Override
-    public CertificateDto saveOrUpdate(UUID id, CertificateDto dto) {
+    public ResponObject<CertificateDto> saveOrUpdate(UUID id, CertificateDto dto) {
         if (dto != null) {
             Certificate entity = null;
             if (dto.getId() != null) {
@@ -49,19 +50,19 @@ public class CertificateServiceImpl extends GenericServiceImpl<Certificate, UUID
 
             entity = reponsitory.save(entity);
             if (entity != null) {
-                return new CertificateDto(entity);
+                return new ResponObject<CertificateDto>("Add Certificate Successfuly", "OK", 200, dto);
             }
         }
-        return null;
+        return new ResponObject<CertificateDto>("Add Certificate Failed", "BAD REQUEST", 400);
     }
 
     @Override
-    public Boolean deleteKho(UUID id) {
+    public ResponObject<Boolean> deleteKho(UUID id) {
         if (id != null) {
             reponsitory.deleteById(id);
-            return true;
+            return new ResponObject<>(true);
         }
-        return false;
+        return new ResponObject<>(false);
     }
 
     @Override
@@ -70,7 +71,7 @@ public class CertificateServiceImpl extends GenericServiceImpl<Certificate, UUID
     }
 
     @Override
-    public Page<CertificateDto> searchByPage(CertificateSearchDto dto) {
+    public ResponObject<Page<CertificateDto>> searchByPage(CertificateSearchDto dto) {
         if (dto == null) {
             return null;
         }
@@ -114,7 +115,7 @@ public class CertificateServiceImpl extends GenericServiceImpl<Certificate, UUID
 
         Pageable pageable = PageRequest.of(pageIndex, pageSize);
         Page<CertificateDto> result = new PageImpl<CertificateDto>(entities, pageable, count);
-        return result;
+        return new ResponObject<>("Get Page Successfuly", "OK", 200, result);
     }
 
     @Override
@@ -123,9 +124,9 @@ public class CertificateServiceImpl extends GenericServiceImpl<Certificate, UUID
     }
 
     @Override
-    public List<CertificateDto> getAllCertificate() {
+    public ResponObject<List<CertificateDto>> getAllCertificate() {
         List<CertificateDto> listCertificate = reponsitory.getAllCertificate();
-        return listCertificate;
+        return new ResponObject<List<CertificateDto>>(listCertificate);
     }
 
     @Override

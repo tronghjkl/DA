@@ -23,37 +23,37 @@ public class RestWardController {
     WardServiceImpl wardService;
 
     @Secured({AFFakeConstants.ROLE_ADMIN, AFFakeConstants.ROLE_SUPER_ADMIN})
-    @RequestMapping(value = "/getAllWard", method = RequestMethod.GET)
+    @RequestMapping(value = "/get-all-ward", method = RequestMethod.GET)
     public ResponseEntity<List<WardDto>> getAllWard() {
         List<WardDto> result = wardService.getAllWard();
-        return new ResponseEntity<List<WardDto>>(result, HttpStatus.OK);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @Secured({AFFakeConstants.ROLE_ADMIN, AFFakeConstants.ROLE_SUPER_ADMIN})
-    @RequestMapping(value = "/addWard", method = RequestMethod.POST)
+    @RequestMapping(value = "/add-ward", method = RequestMethod.POST)
     public ResponseEntity<WardDto> addWard(@RequestBody WardDto wardDto) {
         WardDto result = wardService.saveOrUpdate(null, wardDto);
-        return new ResponseEntity<WardDto>(result, HttpStatus.OK);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @Secured({AFFakeConstants.ROLE_ADMIN, AFFakeConstants.ROLE_SUPER_ADMIN})
-    @RequestMapping(value = "/addWard/{id}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/add-ward/{id}", method = RequestMethod.PUT)
     public ResponseEntity<WardDto> updateWard(@RequestBody WardDto wardDto, @PathVariable UUID id) {
         WardDto result = wardService.saveOrUpdate(id, wardDto);
-        return new ResponseEntity<WardDto>(result, HttpStatus.OK);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @Secured({AFFakeConstants.ROLE_ADMIN, AFFakeConstants.ROLE_SUPER_ADMIN})
-    @RequestMapping(value = "/searchWard", method = RequestMethod.POST)
+    @RequestMapping(value = "/search-ward", method = RequestMethod.POST)
     public ResponseEntity<Page<WardDto>> searchWard(@RequestBody WardSearchDto wardSearchDto) {
         Page<WardDto> page = wardService.searchByPage(wardSearchDto);
         return new ResponseEntity<>(page, HttpStatus.OK);
     }
 
     @Secured({AFFakeConstants.ROLE_ADMIN, AFFakeConstants.ROLE_SUPER_ADMIN})
-    @RequestMapping(value = "/deleteWard/{id}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/delete-ward/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<Boolean> delete(@PathVariable UUID id) {
         Boolean result = wardService.deleteKho(id);
-        return new ResponseEntity<Boolean>(result, HttpStatus.OK);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }

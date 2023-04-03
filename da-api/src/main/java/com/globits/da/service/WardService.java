@@ -12,19 +12,19 @@ import java.util.UUID;
 
 @Service
 public interface WardService extends GenericService<Ward, UUID> {
-    public Page<WardDto> getPage(int pageSize, int pageIndex);
+    Page<WardDto> getPage(int pageSize, int pageIndex);
 
-    public WardDto saveOrUpdate(UUID id, WardDto dto);
+    WardDto saveOrUpdate(UUID id, WardDto dto);
 
-    public Boolean deleteKho(UUID id);
+    Boolean deleteKho(UUID id);
 
-    public WardDto getCertificate(UUID id);
+    WardDto getCertificate(UUID id);
 
     Page<WardDto> searchByPage(WardSearchDto dto);
 
     Boolean checkCode(UUID id, String code);
 
-    public List<WardDto> getAllWard();
+    List<WardDto> getAllWard();
 
-    public Boolean deleteCheckById(UUID id);
+    Boolean deleteCheckById(UUID id);
 }

@@ -48,9 +48,7 @@ public class WardServiceImpl extends GenericServiceImpl<Ward, UUID> implements W
             entity.setArea(dto.getArea());
 
             entity = reponsitory.save(entity);
-            if (entity != null) {
-                return new WardDto(entity);
-            }
+            return new WardDto(entity);
         }
         return null;
     }
@@ -109,12 +107,11 @@ public class WardServiceImpl extends GenericServiceImpl<Ward, UUID> implements W
         int startPosition = pageIndex * pageSize;
         q.setFirstResult(startPosition);
         q.setMaxResults(pageSize);
-        List<WardDto> entities = q.getResultList();
+        List entities = q.getResultList();
         long count = (long) qCount.getSingleResult();
 
         Pageable pageable = PageRequest.of(pageIndex, pageSize);
-        Page<WardDto> result = new PageImpl<WardDto>(entities, pageable, count);
-        return result;
+        return new PageImpl<WardDto>(entities, pageable, count);
     }
 
     @Override
@@ -124,8 +121,7 @@ public class WardServiceImpl extends GenericServiceImpl<Ward, UUID> implements W
 
     @Override
     public List<WardDto> getAllWard() {
-        List<WardDto> listWard = reponsitory.getAllWard();
-        return listWard;
+        return reponsitory.getAllWard();
     }
 
     @Override

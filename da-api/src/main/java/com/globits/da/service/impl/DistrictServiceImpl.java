@@ -7,6 +7,7 @@ import com.globits.da.domain.Ward;
 import com.globits.da.dto.DistrictDto;
 import com.globits.da.dto.WardDto;
 import com.globits.da.dto.search.DistrictSearchDto;
+import com.globits.da.domain.baseObject.ResponObject;
 import com.globits.da.repository.DistrictReponsitory;
 import com.globits.da.repository.ProvinceReponsitory;
 import com.globits.da.repository.WardReponsitory;
@@ -63,21 +64,22 @@ public class DistrictServiceImpl extends GenericServiceImpl<District, UUID> impl
             entity.setArea(dto.getArea());
             entity.setPopulation(dto.getPopulation());
 
+            if (dto.getWards() != null) {
+                List<Ward> wards = new ArrayList<>();
+                for (WardDto wardDto : dto.getWards()) {
+                    Ward ward = new Ward();
+                    ward.setName(wardDto.getName());
+                    ward.setCode(wardDto.getCode());
+                    ward.setArea(wardDto.getArea());
+                    ward.setPopulation(wardDto.getPopulation());
 
-            List<Ward> wards = new ArrayList<>();
-            for (WardDto wardDto : dto.getWards()) {
-                Ward ward = new Ward();
-                ward.setName(wardDto.getName());
-                ward.setCode(wardDto.getCode());
-                ward.setArea(wardDto.getArea());
-                ward.setPopulation(wardDto.getPopulation());
+                    ward.setDistrict(entity);
 
-                ward.setDistrict(entity);
+                    wards.add(ward);
+                }
 
-                wards.add(ward);
+                entity.setWards(wards);
             }
-
-            entity.setWards(wards);
 
             entity = reponsitory.save(entity);
             if (entity != null) {
@@ -166,7 +168,7 @@ public class DistrictServiceImpl extends GenericServiceImpl<District, UUID> impl
     }
 
     @Override
-    public DistrictDto saveOrUpdate2(UUID id, DistrictDto dto) {
+    public ResponObject<DistrictDto> saveOrUpdate2(UUID id, DistrictDto dto) {
         if (dto != null) {
             District entity = null;
             if (dto.getId() != null) {
@@ -181,19 +183,25 @@ public class DistrictServiceImpl extends GenericServiceImpl<District, UUID> impl
 
             Optional<Province> province = provinceReponsitory.findById(dto.getProvinceId());
 
-            entity.setCode(dto.getCode());
-            entity.setName(dto.getName());
-            entity.setPopulation(dto.getPopulation());
-            entity.setArea(dto.getArea());
-            entity.setGDP(dto.getGDP());
-            entity.setProvince(province.get());
+            if (province.isPresent()) {
+                entity.setCode(dto.getCode());
+                entity.setName(dto.getName());
+                entity.setPopulation(dto.getPopulation());
+                entity.setArea(dto.getArea());
+                entity.setGDP(dto.getGDP());
+                entity.setProvince(province.get());
 
-            entity = reponsitory.save(entity);
-            if (entity != null) {
-                return new DistrictDto(entity);
+                entity = reponsitory.save(entity);
+                if (entity != null) {
+                    return new ResponObject<>("Add District Successfuly", "OK", 200, dto);
+                }
+            } else {
+                return new ResponObject<>("ProvinceId is blank", "Bad Request", 400, dto);
             }
+
         }
-        return null;
+        return new ResponObject<>("District is blank", "Bad Request", 400, dto);
+
     }
 
     @Override
@@ -215,7 +223,6 @@ public class DistrictServiceImpl extends GenericServiceImpl<District, UUID> impl
             entity.setName(dto.getName());
             entity.setArea(dto.getArea());
             entity.setPopulation(dto.getPopulation());
-
 
             List<WardDto> wardDtoList = dto.getWards();
             List<Ward> wards = new ArrayList<>();
@@ -239,5 +246,11 @@ public class DistrictServiceImpl extends GenericServiceImpl<District, UUID> impl
         }
 
         return null;
+    }
+
+    @Override
+    public ResponObject<List<DistrictDto>> getDistrictByProvinceId(UUID id) {
+        List<DistrictDto> districtDtoList = reponsitory.getDistrictsByProvinceId(id);
+        return new ResponObject<List<DistrictDto>>("Get List Successfuly", "OK", 200, districtDtoList);
     }
 }

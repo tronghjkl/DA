@@ -1,10 +1,9 @@
 package com.globits.da.rest;
 
 import com.globits.da.dto.EmployeeCertificateDto;
+import com.globits.da.domain.baseObject.ResponObject;
 import com.globits.da.service.EmployeeCertificateService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -17,8 +16,8 @@ public class RestEmployeeCercificateController {
     EmployeeCertificateService employeeCertificateService;
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    ResponseEntity<EmployeeCertificateDto> add(@RequestBody EmployeeCertificateDto dto) {
-        EmployeeCertificateDto result = employeeCertificateService.saveOrUpdate(null, dto);
-        return new ResponseEntity<>(result, HttpStatus.OK);
+    ResponObject<EmployeeCertificateDto> add(@RequestBody EmployeeCertificateDto dto) {
+        ResponObject<EmployeeCertificateDto> result = employeeCertificateService.save(dto);
+        return result;
     }
 }

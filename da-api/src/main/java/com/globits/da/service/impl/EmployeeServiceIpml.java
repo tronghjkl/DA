@@ -1,18 +1,20 @@
 package com.globits.da.service.impl;
 
 import com.globits.core.service.impl.GenericServiceImpl;
+import com.globits.da.constants.ErrorCode;
 import com.globits.da.domain.District;
 import com.globits.da.domain.Employee;
 import com.globits.da.domain.Province;
 import com.globits.da.domain.Ward;
+import com.globits.da.domain.baseObject.ResponObject;
 import com.globits.da.dto.EmployeeDTO;
 import com.globits.da.dto.search.EmployeeSearchDTO;
-import com.globits.da.excel.ResponObject;
 import com.globits.da.repository.DistrictReponsitory;
 import com.globits.da.repository.EmployeeRepository;
 import com.globits.da.repository.ProvinceReponsitory;
 import com.globits.da.repository.WardReponsitory;
 import com.globits.da.service.EmployeeService;
+import com.globits.da.validation.Validate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -24,9 +26,6 @@ import org.springframework.util.StringUtils;
 import javax.persistence.Query;
 import java.util.List;
 import java.util.UUID;
-import java.util.regex.Pattern;
-
-import static com.globits.da.Constants.EMAIL_PATTERN;
 
 
 @Service
@@ -41,6 +40,8 @@ public class EmployeeServiceIpml extends GenericServiceImpl<Employee, UUID> impl
     DistrictReponsitory districtReponsitory;
     @Autowired
     WardReponsitory wardReponsitory;
+    @Autowired
+    Validate validate;
 
     // V1
     @Override
@@ -142,7 +143,7 @@ public class EmployeeServiceIpml extends GenericServiceImpl<Employee, UUID> impl
     // V2
     @Override
     public ResponObject<EmployeeDTO> addEmployee(EmployeeDTO dto) {
-        ResponObject<EmployeeDTO> result = validate(dto);
+        ResponObject<EmployeeDTO> result = validate.validateEmployee(dto);
         if (result.getValid()) {
 
             Employee e = new Employee();
@@ -167,7 +168,7 @@ public class EmployeeServiceIpml extends GenericServiceImpl<Employee, UUID> impl
     public ResponObject<EmployeeDTO> addEmployee2(EmployeeDTO dto) {
 
         Employee e = new Employee();
-        if (!existsByCode(dto.getCode())) {
+        if (!validate.existsByCode(dto.getCode())) {
             if (validateEmployee(dto)) {
                 e.setCode(dto.getCode());
                 e.setName(dto.getName());
@@ -185,7 +186,7 @@ public class EmployeeServiceIpml extends GenericServiceImpl<Employee, UUID> impl
 
                 employeeRepository.save(e);
             } else {
-                return new ResponObject<EmployeeDTO>("province, district, ward not ");
+                return new ResponObject<EmployeeDTO>("province, district, ward not available");
             }
 
 
@@ -221,7 +222,7 @@ public class EmployeeServiceIpml extends GenericServiceImpl<Employee, UUID> impl
     public ResponObject<EmployeeDTO> update(UUID id, EmployeeDTO dto) {
         Employee entity = employeeRepository.findById(id).orElse(null);
         if (entity != null) {
-            if (!existsByCode(dto.getCode())) {
+            if (!validate.existsByCode(dto.getCode())) {
                 if (validateEmployee(dto)) {
                     entity.setCode(dto.getCode());
                     entity.setName(dto.getName());
@@ -252,59 +253,56 @@ public class EmployeeServiceIpml extends GenericServiceImpl<Employee, UUID> impl
                 return new ResponObject<>("code is exist", "BAD REQUEST", 400);
             }
 
-            return new ResponObject<>("update successful", new EmployeeDTO(entity));
+            return new ResponObject<>(ErrorCode.SUCCESS.getMessage(), new EmployeeDTO(entity));
         }
         return null;
     }
 
 
-    private ResponObject validate(EmployeeDTO dto) {
-
-        if (dto.getCode().equals(employeeRepository.getAllEmployee())) {
-            return new ResponObject(false, " duplicate code");
-        }
-        if (dto.getCode().contains(" ")) {
-            return new ResponObject(false, "the code does not contain spaces");
-        }
-        if (dto.getCode().length() < 6 || dto.getCode().length() > 10) {
-            return new ResponObject(false, "code length from 6 to 10 characters");
-        }
-        if (existsByCode(dto.getCode())) {
-            return new ResponObject(false, ": code already exist");
-        }
-        if (dto.getName() == null) {
-            return new ResponObject(false, " name is required");
-        }
-        if (dto.getEmail() == null && !Pattern.matches(EMAIL_PATTERN, dto.getEmail())) {
-            return new ResponObject(false, "email is required");
-        }
-
-        if (dto.getPhone() == null) {
-            return new ResponObject(false, "Input phone");
-        }
-        if (dto.getPhone().length() > 11) {
-            return new ResponObject(false, "phone contains max 11 numbers");
-        }
-        if (dto.getPhone().length() < 10) {
-            return new ResponObject(false, "phone contains min 10 numbers");
-        }
-
-        if (dto.getAge() < 0) {
-            return new ResponObject(false, "age cannot be negative");
-        }
-
-        return new ResponObject(true, "ok");
-
-    }
-
-    private boolean existsByCode(String code) {
-        try {
-            Employee employee = employeeRepository.getByCode(code);
-            return employee != null;
-        } catch (Exception e) {
-            return false;
-        }
-    }
+//    private ResponObject validate(EmployeeDTO dto) {
+//
+//        if (dto.getCode().contains(" ")) {
+//            return new ResponObject(false, "the code does not contain spaces");
+//        }
+//        if (dto.getCode().length() < 6 || dto.getCode().length() > 10) {
+//            return new ResponObject(false, "code length from 6 to 10 characters");
+//        }
+//        if (existsByCode(dto.getCode())) {
+//            return new ResponObject(false, ": code already exist");
+//        }
+//        if (dto.getName() == null) {
+//            return new ResponObject(false, " name is required");
+//        }
+//        if (dto.getEmail() == null && !Pattern.matches(EMAIL_PATTERN, dto.getEmail())) {
+//            return new ResponObject(false, "email is required");
+//        }
+//
+//        if (dto.getPhone() == null) {
+//            return new ResponObject(false, "Input phone");
+//        }
+//        if (dto.getPhone().length() > 11) {
+//            return new ResponObject(false, "phone contains max 11 numbers");
+//        }
+//        if (dto.getPhone().length() < 10) {
+//            return new ResponObject(false, "phone contains min 10 numbers");
+//        }
+//
+//        if (dto.getAge() < 0) {
+//            return new ResponObject(false, "age cannot be negative");
+//        }
+//
+//        return new ResponObject(true, "ok");
+//
+//    }
+//
+//    private boolean existsByCode(String code) {
+//        try {
+//            Employee employee = employeeRepository.getByCode(code);
+//            return employee != null;
+//        } catch (Exception e) {
+//            return false;
+//        }
+//    }
 
 
 }

@@ -1,4 +1,4 @@
-package com.globits.da;
+package com.globits.da.constants;
 
 public class Constants {
 	public static enum StaffType {
@@ -55,5 +55,7 @@ public class Constants {
 	}
 
 	public static final String EMAIL_PATTERN = "^([a-zA-Z0-9_\\.\\-])+\\@(([a-zA-Z0-9\\-])+\\.)+([a-zA-Z0-9]{2,4})+$";
+
+
 
 }
