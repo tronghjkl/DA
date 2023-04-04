@@ -13,7 +13,7 @@ import java.util.UUID;
 
 @Service
 public interface ExcelService extends GenericService<Employee, UUID> {
-    public ResponObject<List<EmployeeDTO>> readExcelData(MultipartFile file) throws IOException;
+    ResponObject<List<EmployeeDTO>> readExcelData(MultipartFile file) throws IOException;
 
     ResponObject<List<EmployeeDTO>> export(List<EmployeeDTO> employees, String fileName) throws IOException;
 }

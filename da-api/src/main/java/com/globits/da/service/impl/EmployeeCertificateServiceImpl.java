@@ -50,17 +50,21 @@ public class EmployeeCertificateServiceImpl extends GenericServiceImpl<EmployeeC
             Certificate certificate = certificateReponsitory.findById(dto.getCertificateId()).orElse(null);
             Province province = provinceReponsitory.findById(dto.getProvinceId()).orElse(null);
 
-            entity.setEmployee(employee);
-            entity.setCertificate(certificate);
-            entity.setProvince(province);
-            entity.setStartDate(dto.getStartDate());
-            entity.setEndDate(dto.getEndDate());
+            if (employee != null && certificate != null && province != null) {
+                entity.setEmployee(employee);
+                entity.setCertificate(certificate);
+                entity.setProvince(province);
+                entity.setStartDate(dto.getStartDate());
+                entity.setEndDate(dto.getEndDate());
 
-            entity = responsitory.save(entity);
+                entity = responsitory.save(entity);
+            } else {
+                return new ResponObject<>("Add Failed", "BAD REQUEST", 400);
+            }
 
-        } else return new ResponObject<EmployeeCertificateDto>("Add Failed", "BAD REQUEST", 400);
+        } else return new ResponObject<>("Add Failed", "BAD REQUEST", 400);
 
-        return new ResponObject<EmployeeCertificateDto>("Add successfuly", new EmployeeCertificateDto(entity));
+        return new ResponObject<>("Add successfuly", "OK", 200, new EmployeeCertificateDto(entity));
     }
 
     //check still has time

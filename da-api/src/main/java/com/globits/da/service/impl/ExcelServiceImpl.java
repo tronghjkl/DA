@@ -5,13 +5,14 @@ import com.globits.da.domain.District;
 import com.globits.da.domain.Employee;
 import com.globits.da.domain.Province;
 import com.globits.da.domain.Ward;
-import com.globits.da.dto.EmployeeDTO;
 import com.globits.da.domain.baseObject.ResponObject;
+import com.globits.da.dto.EmployeeDTO;
 import com.globits.da.repository.DistrictReponsitory;
 import com.globits.da.repository.EmployeeRepository;
 import com.globits.da.repository.ProvinceReponsitory;
 import com.globits.da.repository.WardReponsitory;
 import com.globits.da.service.ExcelService;
+import com.globits.da.validation.Validate;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -26,33 +27,27 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.regex.Pattern;
-
-import static com.globits.da.constants.Constants.EMAIL_PATTERN;
 
 @Service
 public class ExcelServiceImpl extends GenericServiceImpl<Employee, UUID> implements ExcelService {
-
     @Autowired
     EmployeeRepository repository;
-
     @Autowired
     ProvinceReponsitory provinceReponsitory;
-
     @Autowired
     DistrictReponsitory districtReponsitory;
-
     @Autowired
     WardReponsitory wardReponsitory;
-
     @Autowired
     EmployeeRepository employeeRepository;
+    @Autowired
+    Validate validate;
 
     @Override
     public ResponObject<List<EmployeeDTO>> readExcelData(MultipartFile file) throws IOException {
         List<EmployeeDTO> employeeDtoList = new ArrayList<>();
         List<Employee> employees = new ArrayList<>();
-        String error = "";
+        StringBuilder error = new StringBuilder();
         // Mở file Excel
         Workbook workbook = WorkbookFactory.create(new ByteArrayInputStream(file.getBytes()));
 
@@ -76,7 +71,7 @@ public class ExcelServiceImpl extends GenericServiceImpl<Employee, UUID> impleme
         for (int i = 1; i <= sheet.getLastRowNum(); i++) {
             Row row = sheet.getRow(i);
             if (row == null) {
-                error += i + 1 + ": row is not blank";
+                error.append(i).append(1).append(": row is not blank");
                 continue;
             }
 
@@ -100,12 +95,13 @@ public class ExcelServiceImpl extends GenericServiceImpl<Employee, UUID> impleme
             employeeDto.setDistrictId(districtId);
             employeeDto.setWardId(wardId);
 
-            ResponObject<EmployeeDTO> result = validate(employeeDto);
+            ResponObject result = validate.validateEmployee(employeeDto);
+            Boolean responProvinceDistrictWard = validate.validateProvince(employeeDto);
 
-            if (result.getValid()) {
+            if (result.getValid() && responProvinceDistrictWard) {
                 employeeDtoList.add(employeeDto);
             } else {
-                error += i + 1 + ": " + result.getMessager() + "; ";
+                error.append(i).append(1).append(": ").append(result.getMessager()).append("; ");
             }
 
         }
@@ -172,78 +168,6 @@ public class ExcelServiceImpl extends GenericServiceImpl<Employee, UUID> impleme
         }
         String uuidString = cell.getStringCellValue();
         return UUID.fromString(uuidString);
-    }
-
-    private ResponObject validate(EmployeeDTO dto) {
-
-//        if (dto.getCode().equals(employeeRepository.getAllEmployee())) {
-//            return new ResponObject(false, " duplicate code");
-//        }
-        if (dto.getCode().contains(" ")) {
-            return new ResponObject(false, "the code does not contain spaces");
-        }
-        if (dto.getCode().length() < 6 || dto.getCode().length() > 10) {
-            return new ResponObject(false, "code length from 6 to 10 characters");
-        }
-        if (existsByCode(dto.getCode())) {
-            return new ResponObject(false, ": code already exist");
-        }
-        if (dto.getName() == null) {
-            return new ResponObject(false, " name is required");
-        }
-        if (dto.getEmail() == null && !Pattern.matches(EMAIL_PATTERN, dto.getEmail())) {
-            return new ResponObject(false, "email is required");
-        }
-
-        if (dto.getPhone() == null) {
-            return new ResponObject(false, "Input phone");
-        }
-        if (dto.getPhone().length() > 11) {
-            return new ResponObject(false, "phone contains max 11 numbers");
-        }
-        if (dto.getPhone().length() < 10) {
-            return new ResponObject(false, "phone contains min 10 numbers");
-        }
-
-        if (dto.getAge() < 0) {
-            return new ResponObject(false, "age cannot be negative");
-        }
-        if (dto.getProvinceId() == null) {
-            return new ResponObject(false, "Province is not blank");
-        }
-        if (dto.getDistrictId() == null) {
-            return new ResponObject(false, "District is not blank");
-        }
-        if (dto.getWardId() == null) {
-            return new ResponObject(false, "Ward is not blank");
-        }
-        if (!validateEmployee(dto)) {
-            return new ResponObject(false, "Province, District,Ward is not available");
-        }
-
-
-        return new ResponObject(true, "ok");
-
-    }
-
-    public Boolean validateEmployee(EmployeeDTO dto) {
-
-        Province province = provinceReponsitory.findById(dto.getProvinceId()).orElse(null);
-
-        if (province != null) {
-            List<District> districts = province.getDistricts();
-            for (District district : districts) {
-                if (dto.getDistrictId().equals(district.getId())) {
-                    List<Ward> wards = district.getWards();
-                    for (Ward ward : wards) {
-                        if (dto.getWardId().equals(ward.getId())) {
-                            return true;
-                        }
-                    }
-                }
-            }
-        }
-        return false;
     }
 
     private boolean existsByCode(String code) {

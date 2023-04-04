@@ -15,9 +15,8 @@ public class RestEmployeeCercificateController {
     @Autowired
     EmployeeCertificateService employeeCertificateService;
 
-    @RequestMapping(value = "/add", method = RequestMethod.POST)
+    @RequestMapping(value = "/add-certificate", method = RequestMethod.POST)
     ResponObject<EmployeeCertificateDto> add(@RequestBody EmployeeCertificateDto dto) {
-        ResponObject<EmployeeCertificateDto> result = employeeCertificateService.save(dto);
-        return result;
+        return employeeCertificateService.save(dto);
     }
 }

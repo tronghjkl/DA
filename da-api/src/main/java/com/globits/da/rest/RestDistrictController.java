@@ -25,30 +25,20 @@ public class RestDistrictController {
 
     @Secured({AFFakeConstants.ROLE_ADMIN, AFFakeConstants.ROLE_SUPER_ADMIN})
     @RequestMapping(value = "/get-all-district", method = RequestMethod.GET)
-    public ResponseEntity<List<DistrictDto>> getAllDistrict() {
-        List<DistrictDto> result = districtService.getAllDistrict();
-        return new ResponseEntity<>(result, HttpStatus.OK);
+    public ResponObject<List<DistrictDto>> getAllDistrict() {
+        return districtService.getAll();
     }
 
     @Secured({AFFakeConstants.ROLE_ADMIN, AFFakeConstants.ROLE_SUPER_ADMIN})
     @RequestMapping(value = "/add-district", method = RequestMethod.POST)
-    public ResponseEntity<DistrictDto> addDistrict(@RequestBody DistrictDto districtDto) {
-        DistrictDto result = districtService.saveOrUpdate(null, districtDto);
-        return new ResponseEntity<>(result, HttpStatus.OK);
-    }
-
-    @Secured({AFFakeConstants.ROLE_ADMIN, AFFakeConstants.ROLE_SUPER_ADMIN})
-    @RequestMapping(value = "/add-district/{id}", method = RequestMethod.PUT)
-    public ResponseEntity<DistrictDto> updateDistrict(@RequestBody DistrictDto districtDto, @PathVariable UUID id) {
-        DistrictDto result = districtService.saveOrUpdate(id, districtDto);
-        return new ResponseEntity<>(result, HttpStatus.OK);
+    public ResponObject<DistrictDto> addDistrict(@RequestBody DistrictDto districtDto) {
+        return districtService.save(districtDto);
     }
 
     @Secured({AFFakeConstants.ROLE_ADMIN, AFFakeConstants.ROLE_SUPER_ADMIN})
     @RequestMapping(value = "/update/{id}", method = RequestMethod.PUT)
-    public ResponseEntity<DistrictDto> update(@RequestBody DistrictDto districtDto, @PathVariable UUID id) {
-        DistrictDto result = districtService.update(id, districtDto);
-        return new ResponseEntity<>(result, HttpStatus.OK);
+    public ResponObject<DistrictDto> update(@RequestBody DistrictDto districtDto, @PathVariable UUID id) {
+        return districtService.update(id, districtDto);
     }
 
     @Secured({AFFakeConstants.ROLE_ADMIN, AFFakeConstants.ROLE_SUPER_ADMIN})
@@ -60,22 +50,20 @@ public class RestDistrictController {
 
     @Secured({AFFakeConstants.ROLE_ADMIN, AFFakeConstants.ROLE_SUPER_ADMIN})
     @RequestMapping(value = "/delete-district/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity<Boolean> delete(@PathVariable UUID id) {
-        Boolean result = districtService.deleteKho(id);
-        return new ResponseEntity<>(result, HttpStatus.OK);
+    public ResponObject<Boolean> delete(@PathVariable UUID id) {
+        return districtService.deleteKho(id);
     }
 
     @Secured({AFFakeConstants.ROLE_ADMIN, AFFakeConstants.ROLE_SUPER_ADMIN})
     @RequestMapping(value = "/add-district2", method = RequestMethod.POST)
-    public ResponObject<DistrictDto> addDistrict2(@RequestBody DistrictDto districtDto) {
-        return districtService.saveOrUpdate2(null, districtDto);
+    public ResponObject<DistrictDto> addDistrictWithProvinceId(@RequestBody DistrictDto districtDto) {
+        return districtService.saveWithProvinceId(districtDto);
     }
 
     @Secured({AFFakeConstants.ROLE_ADMIN, AFFakeConstants.ROLE_SUPER_ADMIN})
     @RequestMapping(value = "/search-district-by-provinceId", method = RequestMethod.GET)
-    public ResponObject<List<DistrictDto>> addDistrict2(@RequestParam UUID provinceId) {
-        ResponObject result = districtService.getDistrictByProvinceId(provinceId);
-        return new ResponObject<>(result.getMessager(), result.getStatus(), result.getCode(), (List<DistrictDto>) result.getData());
+    public ResponObject<List<DistrictDto>> getDistrictWithProvinceId(@RequestParam UUID provinceId) {
+        return districtService.getDistrictByProvinceId(provinceId);
     }
 
 

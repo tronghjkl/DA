@@ -15,6 +15,7 @@ import com.globits.da.repository.ProvinceReponsitory;
 import com.globits.da.repository.WardReponsitory;
 import com.globits.da.service.EmployeeService;
 import com.globits.da.validation.Validate;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -51,41 +52,39 @@ public class EmployeeServiceIpml extends GenericServiceImpl<Employee, UUID> impl
     }
 
     @Override
-    public EmployeeDTO saveOrUpdate(UUID id, EmployeeDTO dto) {
-        if (dto != null) {
-            Employee entity = null;
-            if (dto.getId() != null) {
-                if (dto.getId() != null && !dto.getId().equals(id)) {
-                    return null;
-                }
-                entity = employeeRepository.getOne(dto.getId());
-            }
-            if (entity == null) {
-                entity = new Employee();
-            }
-            entity.setCode(dto.getCode());
-            entity.setName(dto.getName());
-            entity.setEmail(dto.getEmail());
-            entity.setPhone(dto.getPhone());
-            entity.setAge(dto.getAge());
-            entity = employeeRepository.save(entity);
-            if (entity != null) {
-                return new EmployeeDTO(entity);
-            }
-        }
-        return null;
-    }
-
-    @Override
-    public List<EmployeeDTO> getAllEmployee() {
-        List<EmployeeDTO> listEmployee = employeeRepository.getAllEmployee();
-        return listEmployee;
-    }
-
-    @Override
-    public Page<EmployeeDTO> searchEmployee(EmployeeSearchDTO dto) {
+    public ResponObject<EmployeeDTO> save(EmployeeDTO dto) {
         if (dto == null) {
             return null;
+        }
+        Employee entity = new Employee();
+
+        entity.setCode(dto.getCode());
+        entity.setName(dto.getName());
+        entity.setEmail(dto.getEmail());
+        entity.setPhone(dto.getPhone());
+        entity.setAge(dto.getAge());
+
+        if (entity == null) {
+            return new ResponObject<>("Add Employee Failed", "BAD REQUEST", 400);
+        }
+        employeeRepository.save(entity);
+
+        return new ResponObject<>("Add Employee Successful", "OK", 200, dto);
+    }
+
+    @Override
+    public ResponObject<List<EmployeeDTO>> getAllEmployee() {
+        List<EmployeeDTO> listEmployee = employeeRepository.getAllEmployee();
+        if (CollectionUtils.isEmpty(listEmployee)) {
+            return new ResponObject<>("Not Found Employee", "BAD REQUEST", 400);
+        }
+        return new ResponObject<>("Get List Employee Successful", "OK", 200, listEmployee);
+    }
+
+    @Override
+    public ResponObject<Page<EmployeeDTO>> searchEmployee(EmployeeSearchDTO dto) {
+        if (dto.getKeyword() == null) {
+            return new ResponObject<>("Input keyword", "BAD REQUEST", 400);
         }
         int pageIndex = dto.getPageIndex();
         int pageSize = dto.getPageSize();
@@ -125,18 +124,21 @@ public class EmployeeServiceIpml extends GenericServiceImpl<Employee, UUID> impl
         long count = (long) qCount.getSingleResult();
 
         Pageable pageable = PageRequest.of(pageIndex, pageSize);
-        Page<EmployeeDTO> result = new PageImpl<EmployeeDTO>(entities, pageable, count);
+        Page<EmployeeDTO> result = new PageImpl<>(entities, pageable, count);
 
-        return result;
+        return new ResponObject<>("Search Successful", "OK", 200, result);
     }
 
     @Override
-    public Boolean deleteEmpployee(UUID id) {
+    public ResponObject<Boolean> deleteEmpployee(UUID id) {
         if (id != null) {
-            employeeRepository.deleteById(id);
-            return true;
+            if (employeeRepository.findById(id).isPresent()) {
+                employeeRepository.deleteById(id);
+                return new ResponObject<>("Delete Successful", "OK", 200, true);
+            } else return new ResponObject<>("Not Found Employee Need Delete", "BAD REQUEST", 400, false);
+
         }
-        return false;
+        return new ResponObject<>("Input Id", "BAD REQUEST", 400, false);
     }
 
 
@@ -144,32 +146,28 @@ public class EmployeeServiceIpml extends GenericServiceImpl<Employee, UUID> impl
     @Override
     public ResponObject<EmployeeDTO> addEmployee(EmployeeDTO dto) {
         ResponObject<EmployeeDTO> result = validate.validateEmployee(dto);
-        if (result.getValid()) {
-
-            Employee e = new Employee();
-//            e.setId(dto.getId());
-            e.setCode(dto.getCode());
-            e.setName(dto.getName());
-            e.setEmail(dto.getEmail());
-            e.setPhone(dto.getPhone());
-            e.setAge(dto.getAge());
-            employeeRepository.save(e);
-
-
-            return new ResponObject<>("add successful", new EmployeeDTO(e));
-
-
-        } else {
-            return result;
+        if (!result.getValid()) {
+            return new ResponObject<>("Add Employee Failed", "BAD REQUEST", 400);
         }
+
+        Employee e = new Employee();
+        e.setCode(dto.getCode());
+        e.setName(dto.getName());
+        e.setEmail(dto.getEmail());
+        e.setPhone(dto.getPhone());
+        e.setAge(dto.getAge());
+        employeeRepository.save(e);
+
+        return new ResponObject<>("add successful", "OK", 200, new EmployeeDTO(e));
+
     }
 
     @Override
-    public ResponObject<EmployeeDTO> addEmployee2(EmployeeDTO dto) {
+    public ResponObject<EmployeeDTO> addEmployeeWithAddress(EmployeeDTO dto) {
 
         Employee e = new Employee();
         if (!validate.existsByCode(dto.getCode())) {
-            if (validateEmployee(dto)) {
+            if (validate.validateProvince(dto)) {
                 e.setCode(dto.getCode());
                 e.setName(dto.getName());
                 e.setEmail(dto.getEmail());
@@ -186,7 +184,7 @@ public class EmployeeServiceIpml extends GenericServiceImpl<Employee, UUID> impl
 
                 employeeRepository.save(e);
             } else {
-                return new ResponObject<EmployeeDTO>("province, district, ward not available");
+                return new ResponObject<>("province, district, ward not available", "BAD REQUEST", 400);
             }
 
 
@@ -198,111 +196,43 @@ public class EmployeeServiceIpml extends GenericServiceImpl<Employee, UUID> impl
 
     }
 
-    public Boolean validateEmployee(EmployeeDTO dto) {
-
-        Province province = provinceReponsitory.findById(dto.getProvinceId()).orElse(null);
-
-        if (province != null) {
-            List<District> districts = province.getDistricts();
-            for (District district : districts) {
-                if (dto.getDistrictId().equals(district.getId())) {
-                    List<Ward> wards = district.getWards();
-                    for (Ward ward : wards) {
-                        if (dto.getWardId().equals(ward.getId())) {
-                            return true;
-                        }
-                    }
-                }
-            }
-        }
-        return false;
-    }
-
     @Override
     public ResponObject<EmployeeDTO> update(UUID id, EmployeeDTO dto) {
         Employee entity = employeeRepository.findById(id).orElse(null);
-        if (entity != null) {
-            if (!validate.existsByCode(dto.getCode())) {
-                if (validateEmployee(dto)) {
-                    entity.setCode(dto.getCode());
-                    entity.setName(dto.getName());
-                    entity.setEmail(dto.getEmail());
-                    entity.setPhone(dto.getPhone());
-                    entity.setAge(dto.getAge());
+        if (entity == null) {
+            return new ResponObject<>("Not found employee need update", "BAD REQUEST", 400);
+        }
+        if (!validate.existsByCode(dto.getCode())) {
+            if (validate.validateProvince(dto)) {
+                entity.setCode(dto.getCode());
+                entity.setName(dto.getName());
+                entity.setEmail(dto.getEmail());
+                entity.setPhone(dto.getPhone());
+                entity.setAge(dto.getAge());
 
-                    Province province = provinceReponsitory.findById(dto.getProvinceId()).orElse(null);
-                    District district = districtReponsitory.findById(dto.getDistrictId()).orElse(null);
-                    Ward ward = wardReponsitory.findById(dto.getWardId()).orElse(null);
+                Province province = provinceReponsitory.findById(dto.getProvinceId()).orElse(null);
+                District district = districtReponsitory.findById(dto.getDistrictId()).orElse(null);
+                Ward ward = wardReponsitory.findById(dto.getWardId()).orElse(null);
 
-                    if (province != null && district != null && ward != null) {
-                        entity.setProvince(province);
-                        entity.setWard(ward);
-                        entity.setDistrict(district);
-                    } else {
-                        return new ResponObject<>("missing data", "BAD REQUEST", 400);
-                    }
-
-
-                    employeeRepository.save(entity);
-
+                if (province != null && district != null && ward != null) {
+                    entity.setProvince(province);
+                    entity.setWard(ward);
+                    entity.setDistrict(district);
                 } else {
-                    return new ResponObject<>("province, district, commune is not valid", "BAD REQUEST", 400);
+                    return new ResponObject<>("missing data", "BAD REQUEST", 400);
                 }
 
+                employeeRepository.save(entity);
+
             } else {
-                return new ResponObject<>("code is exist", "BAD REQUEST", 400);
+                return new ResponObject<>("province, district, commune is not valid", "BAD REQUEST", 400);
             }
 
-            return new ResponObject<>(ErrorCode.SUCCESS.getMessage(), new EmployeeDTO(entity));
+        } else {
+            return new ResponObject<>("code is exist", "BAD REQUEST", 400);
         }
-        return null;
+
+        return new ResponObject<>(ErrorCode.SUCCESS.getMessage(), new EmployeeDTO(entity));
     }
-
-
-//    private ResponObject validate(EmployeeDTO dto) {
-//
-//        if (dto.getCode().contains(" ")) {
-//            return new ResponObject(false, "the code does not contain spaces");
-//        }
-//        if (dto.getCode().length() < 6 || dto.getCode().length() > 10) {
-//            return new ResponObject(false, "code length from 6 to 10 characters");
-//        }
-//        if (existsByCode(dto.getCode())) {
-//            return new ResponObject(false, ": code already exist");
-//        }
-//        if (dto.getName() == null) {
-//            return new ResponObject(false, " name is required");
-//        }
-//        if (dto.getEmail() == null && !Pattern.matches(EMAIL_PATTERN, dto.getEmail())) {
-//            return new ResponObject(false, "email is required");
-//        }
-//
-//        if (dto.getPhone() == null) {
-//            return new ResponObject(false, "Input phone");
-//        }
-//        if (dto.getPhone().length() > 11) {
-//            return new ResponObject(false, "phone contains max 11 numbers");
-//        }
-//        if (dto.getPhone().length() < 10) {
-//            return new ResponObject(false, "phone contains min 10 numbers");
-//        }
-//
-//        if (dto.getAge() < 0) {
-//            return new ResponObject(false, "age cannot be negative");
-//        }
-//
-//        return new ResponObject(true, "ok");
-//
-//    }
-//
-//    private boolean existsByCode(String code) {
-//        try {
-//            Employee employee = employeeRepository.getByCode(code);
-//            return employee != null;
-//        } catch (Exception e) {
-//            return false;
-//        }
-//    }
-
 
 }

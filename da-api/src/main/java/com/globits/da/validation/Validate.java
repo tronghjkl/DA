@@ -1,12 +1,17 @@
 package com.globits.da.validation;
 
+import com.globits.da.domain.District;
 import com.globits.da.domain.Employee;
+import com.globits.da.domain.Province;
+import com.globits.da.domain.Ward;
 import com.globits.da.domain.baseObject.ResponObject;
 import com.globits.da.dto.EmployeeDTO;
 import com.globits.da.repository.EmployeeRepository;
+import com.globits.da.repository.ProvinceReponsitory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.regex.Pattern;
 
 import static com.globits.da.constants.Constants.EMAIL_PATTERN;
@@ -15,6 +20,8 @@ import static com.globits.da.constants.Constants.EMAIL_PATTERN;
 public class Validate {
     @Autowired
     EmployeeRepository employeeRepository;
+    @Autowired
+    ProvinceReponsitory provinceReponsitory;
 
     public ResponObject validateEmployee(EmployeeDTO dto) {
 
@@ -59,5 +66,25 @@ public class Validate {
         } catch (Exception e) {
             return false;
         }
+    }
+
+    public Boolean validateProvince(EmployeeDTO dto) {
+
+        Province province = provinceReponsitory.findById(dto.getProvinceId()).orElse(null);
+
+        if (province != null) {
+            List<District> districts = province.getDistricts();
+            for (District district : districts) {
+                if (dto.getDistrictId().equals(district.getId())) {
+                    List<Ward> wards = district.getWards();
+                    for (Ward ward : wards) {
+                        if (dto.getWardId().equals(ward.getId())) {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        return false;
     }
 }

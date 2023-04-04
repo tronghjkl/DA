@@ -25,21 +25,20 @@ public class RestProvinceController {
     @RequestMapping(value = "/add-province", method = RequestMethod.POST)
     public ResponseEntity<ProvinceDto> save(@RequestBody ProvinceDto provinceDto) {
         ProvinceDto result = provinceService.saveOrUpdate(null, provinceDto);
-        return new ResponseEntity<ProvinceDto>(result, HttpStatus.OK);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @Secured({AFFakeConstants.ROLE_ADMIN, AFFakeConstants.ROLE_SUPER_ADMIN})
     @RequestMapping(value = "/add-province/{id}", method = RequestMethod.POST)
     public ResponseEntity<ProvinceDto> save(@RequestBody ProvinceDto provinceDto, @PathVariable UUID id) {
         ProvinceDto result = provinceService.saveOrUpdate(id, provinceDto);
-        return new ResponseEntity<ProvinceDto>(result, HttpStatus.OK);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @Secured({AFFakeConstants.ROLE_ADMIN, AFFakeConstants.ROLE_SUPER_ADMIN})
     @RequestMapping(value = "/get-all-province", method = RequestMethod.GET)
-    public ResponseEntity<List<ProvinceDto>> getALlProvince() {
-        List<ProvinceDto> resutl = provinceService.getAllProvince();
-        return new ResponseEntity<List<ProvinceDto>>(resutl, HttpStatus.OK);
+    public ResponObject<List<ProvinceDto>> getALlProvince() {
+        return provinceService.getAllProvince();
     }
 
     @Secured({AFFakeConstants.ROLE_ADMIN, AFFakeConstants.ROLE_SUPER_ADMIN})
@@ -57,13 +56,13 @@ public class RestProvinceController {
     @Secured({AFFakeConstants.ROLE_ADMIN, AFFakeConstants.ROLE_SUPER_ADMIN})
     @RequestMapping(value = "/add-province2", method = RequestMethod.POST)
     public ResponObject<ProvinceDto> save2(@RequestBody ProvinceDto provinceDto) {
-        return provinceService.addProvince(null, provinceDto);
+        return provinceService.addProvince(provinceDto);
     }
 
     @Secured({AFFakeConstants.ROLE_ADMIN, AFFakeConstants.ROLE_SUPER_ADMIN})
     @RequestMapping(value = "/add-province/{id}", method = RequestMethod.PUT)
     public ResponObject<ProvinceDto> update(@RequestBody ProvinceDto provinceDto, @PathVariable UUID id) {
-        return  provinceService.updateProvince(id, provinceDto);
+        return provinceService.updateProvince(id, provinceDto);
     }
 
 }

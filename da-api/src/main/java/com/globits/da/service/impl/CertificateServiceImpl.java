@@ -126,7 +126,7 @@ public class CertificateServiceImpl extends GenericServiceImpl<Certificate, UUID
     @Override
     public ResponObject<List<CertificateDto>> getAllCertificate() {
         List<CertificateDto> listCertificate = reponsitory.getAllCertificate();
-        return new ResponObject<List<CertificateDto>>(listCertificate);
+        return new ResponObject<>(listCertificate);
     }
 
     @Override

@@ -2,10 +2,12 @@ package com.globits.da.service.impl;
 
 import com.globits.core.service.impl.GenericServiceImpl;
 import com.globits.da.domain.Ward;
+import com.globits.da.domain.baseObject.ResponObject;
 import com.globits.da.dto.WardDto;
 import com.globits.da.dto.search.WardSearchDto;
 import com.globits.da.repository.WardReponsitory;
 import com.globits.da.service.WardService;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -30,36 +32,39 @@ public class WardServiceImpl extends GenericServiceImpl<Ward, UUID> implements W
     }
 
     @Override
-    public WardDto saveOrUpdate(UUID id, WardDto dto) {
-        if (dto != null) {
-            Ward entity = null;
-            if (dto.getId() != null) {
-                if (dto.getId() != null && !dto.getId().equals(id)) {
-                    return null;
-                }
-                entity = reponsitory.getOne(dto.getId());
-            }
-            if (entity == null) {
-                entity = new Ward();
-            }
-            entity.setCode(dto.getCode());
-            entity.setName(dto.getName());
-            entity.setPopulation(dto.getPopulation());
-            entity.setArea(dto.getArea());
-
-            entity = reponsitory.save(entity);
-            return new WardDto(entity);
+    public ResponObject<WardDto> saveOrUpdate(UUID id, WardDto dto) {
+        if (dto == null) {
+            return new ResponObject<>("Input Ward", "BAD REQUEST", 400);
         }
-        return null;
+        Ward entity = null;
+        if (dto.getId() != null) {
+            if (dto.getId() != null && !dto.getId().equals(id)) {
+                return new ResponObject<>("WardId not exsit", "BAD REQUEST", 400);
+            }
+            entity = reponsitory.getOne(dto.getId());
+        }
+        if (entity == null) {
+            entity = new Ward();
+        }
+        entity.setCode(dto.getCode());
+        entity.setName(dto.getName());
+        entity.setPopulation(dto.getPopulation());
+        entity.setArea(dto.getArea());
+
+        reponsitory.save(entity);
+        return new ResponObject<>("Successful", "OK", 200, new WardDto(entity));
     }
 
     @Override
-    public Boolean deleteKho(UUID id) {
+    public ResponObject<Boolean> deleteKho(UUID id) {
         if (id != null) {
+            if (reponsitory.getOne(id) == null) {
+                return new ResponObject<>("Not Found Ward Need Delete", "BAD REQUEST", 400, false);
+            }
             reponsitory.deleteById(id);
-            return true;
+            return new ResponObject<>("Delete Successful", "OK", 200, true);
         }
-        return false;
+        return new ResponObject<>("Input WardId", "BAD REQUEST", 400, false);
     }
 
     @Override
@@ -68,9 +73,9 @@ public class WardServiceImpl extends GenericServiceImpl<Ward, UUID> implements W
     }
 
     @Override
-    public Page<WardDto> searchByPage(WardSearchDto dto) {
+    public ResponObject<Page<WardDto>> searchByPage(WardSearchDto dto) {
         if (dto == null) {
-            return null;
+            return new ResponObject<>("Input Keyword", "BAD REQUEST", 400);
         }
 
         int pageIndex = dto.getPageIndex();
@@ -111,7 +116,8 @@ public class WardServiceImpl extends GenericServiceImpl<Ward, UUID> implements W
         long count = (long) qCount.getSingleResult();
 
         Pageable pageable = PageRequest.of(pageIndex, pageSize);
-        return new PageImpl<WardDto>(entities, pageable, count);
+
+        return new ResponObject<>("Seaerch Succesful", "OK", 200, new PageImpl<WardDto>(entities, pageable, count));
     }
 
     @Override
@@ -120,8 +126,12 @@ public class WardServiceImpl extends GenericServiceImpl<Ward, UUID> implements W
     }
 
     @Override
-    public List<WardDto> getAllWard() {
-        return reponsitory.getAllWard();
+    public ResponObject<List<WardDto>> getAllWard() {
+        List<WardDto> wardDtos = reponsitory.getAllWard();
+        if (CollectionUtils.isEmpty(wardDtos)) {
+            return new ResponObject<>("Get All Ward Failed", "BAD REQUEST", 400);
+        }
+        return new ResponObject<>("Get All Ward Successful", "OK", 200, wardDtos);
     }
 
     @Override

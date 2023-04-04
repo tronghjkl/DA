@@ -25,11 +25,11 @@ public interface ProvinceService extends GenericService<Province, UUID> {
 
     Boolean checkCode(UUID id, String code);
 
-    List<ProvinceDto> getAllProvince();
+    ResponObject<List<ProvinceDto>> getAllProvince();
 
     Boolean deleteCheckById(UUID id);
 
     ResponObject<ProvinceDto> updateProvince(UUID id, ProvinceDto dto);
 
-    ResponObject<ProvinceDto> addProvince(UUID id, ProvinceDto dto);
+    ResponObject<ProvinceDto> addProvince( ProvinceDto dto);
 }

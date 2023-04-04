@@ -11,20 +11,20 @@ import java.util.UUID;
 
 @Service
 public interface EmployeeService {
-    public Page<EmployeeDTO> getPage(int pageSize, int pageIndex);
+    Page<EmployeeDTO> getPage(int pageSize, int pageIndex);
 
-    public EmployeeDTO saveOrUpdate(UUID id, EmployeeDTO dto);
+    ResponObject<EmployeeDTO> save(EmployeeDTO dto);
 
-    public List<EmployeeDTO> getAllEmployee();
+    ResponObject<List<EmployeeDTO>> getAllEmployee();
 
-    public Page<EmployeeDTO> searchEmployee(EmployeeSearchDTO dto);
+    ResponObject<Page<EmployeeDTO>> searchEmployee(EmployeeSearchDTO dto);
 
-    public Boolean deleteEmpployee(UUID id);
+    ResponObject<Boolean> deleteEmpployee(UUID id);
 
     ResponObject<EmployeeDTO> addEmployee(EmployeeDTO dto);
 
-    public ResponObject<EmployeeDTO> addEmployee2(EmployeeDTO dto);
+    ResponObject<EmployeeDTO> addEmployeeWithAddress(EmployeeDTO dto);
 
-    public ResponObject<EmployeeDTO>update(UUID id, EmployeeDTO dto);
+    ResponObject<EmployeeDTO> update(UUID id, EmployeeDTO dto);
 
 }
