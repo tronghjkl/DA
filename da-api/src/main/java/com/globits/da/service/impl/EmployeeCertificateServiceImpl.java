@@ -5,15 +5,14 @@ import com.globits.da.domain.Certificate;
 import com.globits.da.domain.Employee;
 import com.globits.da.domain.EmployeeCertificate;
 import com.globits.da.domain.Province;
-import com.globits.da.dto.EmployeeCertificateDto;
 import com.globits.da.domain.baseObject.ResponObject;
+import com.globits.da.dto.EmployeeCertificateDto;
 import com.globits.da.repository.CertificateReponsitory;
 import com.globits.da.repository.EmployeeCertifcateResponsitory;
 import com.globits.da.repository.EmployeeRepository;
 import com.globits.da.repository.ProvinceReponsitory;
 import com.globits.da.service.EmployeeCertificateService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -31,10 +30,6 @@ public class EmployeeCertificateServiceImpl extends GenericServiceImpl<EmployeeC
     @Autowired
     CertificateReponsitory certificateReponsitory;
 
-    @Override
-    public Page<EmployeeCertificateDto> getPage(int pageSize, int pageIndex) {
-        return null;
-    }
 
     @Override
     public ResponObject<EmployeeCertificateDto> save(EmployeeCertificateDto dto) {
@@ -98,28 +93,4 @@ public class EmployeeCertificateServiceImpl extends GenericServiceImpl<EmployeeC
         return true;
     }
 
-    @Override
-    public Boolean deleteKho(UUID id) {
-        return null;
-    }
-
-    @Override
-    public EmployeeCertificateDto getCertificate(UUID id) {
-        return null;
-    }
-
-    @Override
-    public Boolean checkCode(UUID id, String code) {
-        return null;
-    }
-
-    @Override
-    public List<EmployeeCertificateDto> getAllEmployeeCertificate() {
-        return null;
-    }
-
-    @Override
-    public Boolean deleteCheckById(UUID id) {
-        return null;
-    }
 }

@@ -4,10 +4,10 @@ import com.globits.core.service.impl.GenericServiceImpl;
 import com.globits.da.domain.District;
 import com.globits.da.domain.Province;
 import com.globits.da.domain.Ward;
+import com.globits.da.domain.baseObject.ResponObject;
 import com.globits.da.dto.DistrictDto;
 import com.globits.da.dto.WardDto;
 import com.globits.da.dto.search.DistrictSearchDto;
-import com.globits.da.domain.baseObject.ResponObject;
 import com.globits.da.repository.DistrictReponsitory;
 import com.globits.da.repository.ProvinceReponsitory;
 import com.globits.da.repository.WardReponsitory;
@@ -79,36 +79,34 @@ public class DistrictServiceImpl extends GenericServiceImpl<District, UUID> impl
 
     @Override
     public ResponObject<DistrictDto> update(UUID id, DistrictDto dto) {
-        if (dto != null) {
-            District entity = null;
-            entity = reponsitory.findById(id).get();
-
-            if (entity == null) {
-                return new ResponObject<>("District is not exist", "BAD REQUEST", 400);
-            }
-
-            entity.setCode(dto.getCode());
-            entity.setName(dto.getName());
-            entity.setArea(dto.getArea());
-            entity.setPopulation(dto.getPopulation());
-
-            List<WardDto> wardDtoList = dto.getWards();
-            List<Ward> wards = new ArrayList<>();
-
-            for (WardDto wardDto : wardDtoList) {
-                Ward ward = wardReponsitory.findById(wardDto.getId()).get();
-                ward.setCode(wardDto.getCode());
-                ward.setName(wardDto.getName());
-                ward.setPopulation(wardDto.getPopulation());
-                ward.setArea(wardDto.getArea());
-
-                wards.add(ward);
-            }
-            entity.setWards(wards);
-
-            reponsitory.save(entity);
+        if (dto == null) {
+            return new ResponObject<>("ProvinceDto is blank", "Bad Request", 400);
+        }
+        District entity = reponsitory.findById(id).orElse(null);
+        if (entity == null) {
+            return new ResponObject<>("ProvinceId is blank", "Bad Request", 400);
         }
 
+        entity.setCode(dto.getCode());
+        entity.setName(dto.getName());
+        entity.setArea(dto.getArea());
+        entity.setPopulation(dto.getPopulation());
+
+        List<WardDto> wardDtoList = dto.getWards();
+        List<Ward> wards = new ArrayList<>();
+
+        for (WardDto wardDto : wardDtoList) {
+            Ward ward = wardReponsitory.findById(wardDto.getId()).get();
+            ward.setCode(wardDto.getCode());
+            ward.setName(wardDto.getName());
+            ward.setPopulation(wardDto.getPopulation());
+            ward.setArea(wardDto.getArea());
+
+            wards.add(ward);
+        }
+        entity.setWards(wards);
+
+        reponsitory.save(entity);
         return new ResponObject<>("Update Successful", "OK", 200, dto);
     }
 
@@ -191,22 +189,20 @@ public class DistrictServiceImpl extends GenericServiceImpl<District, UUID> impl
         }
 
         District entity = new District();
-
         Optional<Province> province = provinceReponsitory.findById(dto.getProvinceId());
-
-        if (province.isPresent()) {
-            entity.setCode(dto.getCode());
-            entity.setName(dto.getName());
-            entity.setPopulation(dto.getPopulation());
-            entity.setArea(dto.getArea());
-            entity.setGDP(dto.getGDP());
-            entity.setProvince(province.get());
-
-            if (entity == null) {
-                return new ResponObject<>("ProvinceId is blank", "Bad Request", 400, dto);
-            }
-            reponsitory.save(entity);
+        if (!province.isPresent()) {
+            return new ResponObject<>("ProvinceId is blank", "Bad Request", 400, dto);
         }
+
+        entity.setCode(dto.getCode());
+        entity.setName(dto.getName());
+        entity.setPopulation(dto.getPopulation());
+        entity.setArea(dto.getArea());
+        entity.setGDP(dto.getGDP());
+        entity.setProvince(province.get());
+
+        reponsitory.save(entity);
+
         return new ResponObject<>("Add District Successfuly", "OK", 200, dto);
     }
 
