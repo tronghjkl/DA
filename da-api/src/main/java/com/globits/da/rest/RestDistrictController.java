@@ -32,12 +32,12 @@ public class RestDistrictController {
     @Secured({AFFakeConstants.ROLE_ADMIN, AFFakeConstants.ROLE_SUPER_ADMIN})
     @RequestMapping(value = "/add-district", method = RequestMethod.POST)
     public ResponObject<DistrictDto> addDistrict(@RequestBody DistrictDto districtDto) {
-        return districtService.save(districtDto);
+        return districtService.add(districtDto);
     }
 
     @Secured({AFFakeConstants.ROLE_ADMIN, AFFakeConstants.ROLE_SUPER_ADMIN})
     @RequestMapping(value = "/update/{id}", method = RequestMethod.PUT)
-    public ResponObject<DistrictDto> update(@RequestBody DistrictDto districtDto, @PathVariable UUID id) {
+    public ResponObject<DistrictDto> updateDistrict(@RequestBody DistrictDto districtDto, @PathVariable UUID id) {
         return districtService.update(id, districtDto);
     }
 
@@ -50,7 +50,7 @@ public class RestDistrictController {
 
     @Secured({AFFakeConstants.ROLE_ADMIN, AFFakeConstants.ROLE_SUPER_ADMIN})
     @RequestMapping(value = "/delete-district/{id}", method = RequestMethod.DELETE)
-    public ResponObject<Boolean> delete(@PathVariable UUID id) {
+    public ResponObject<Boolean> deleteDistrict(@PathVariable UUID id) {
         return districtService.deleteKho(id);
     }
 

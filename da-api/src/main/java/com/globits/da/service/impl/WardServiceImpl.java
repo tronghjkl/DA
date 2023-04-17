@@ -32,7 +32,24 @@ public class WardServiceImpl extends GenericServiceImpl<Ward, UUID> implements W
     }
 
     @Override
-    public ResponObject<WardDto> saveOrUpdate(UUID id, WardDto dto) {
+    public ResponObject<WardDto> add( WardDto dto) {
+        if (dto == null) {
+            return new ResponObject<>("Input Ward", "BAD REQUEST", 400);
+        }
+        Ward entity = new Ward();
+
+        entity.setCode(dto.getCode());
+        entity.setName(dto.getName());
+        entity.setPopulation(dto.getPopulation());
+        entity.setArea(dto.getArea());
+
+        reponsitory.save(entity);
+        return new ResponObject<>("Successful", "OK", 200, new WardDto(entity));
+    }
+
+
+    @Override
+    public ResponObject<WardDto> update (UUID id, WardDto dto) {
         if (dto == null) {
             return new ResponObject<>("Input Ward", "BAD REQUEST", 400);
         }
@@ -42,9 +59,6 @@ public class WardServiceImpl extends GenericServiceImpl<Ward, UUID> implements W
                 return new ResponObject<>("WardId not exsit", "BAD REQUEST", 400);
             }
             entity = reponsitory.getOne(dto.getId());
-        }
-        if (entity == null) {
-            entity = new Ward();
         }
         entity.setCode(dto.getCode());
         entity.setName(dto.getName());
@@ -67,10 +81,6 @@ public class WardServiceImpl extends GenericServiceImpl<Ward, UUID> implements W
         return new ResponObject<>("Input WardId", "BAD REQUEST", 400, false);
     }
 
-    @Override
-    public WardDto getCertificate(UUID id) {
-        return null;
-    }
 
     @Override
     public ResponObject<Page<WardDto>> searchByPage(WardSearchDto dto) {
@@ -120,13 +130,9 @@ public class WardServiceImpl extends GenericServiceImpl<Ward, UUID> implements W
         return new ResponObject<>("Seaerch Succesful", "OK", 200, new PageImpl<WardDto>(entities, pageable, count));
     }
 
-    @Override
-    public Boolean checkCode(UUID id, String code) {
-        return null;
-    }
 
     @Override
-    public ResponObject<List<WardDto>> getAllWard() {
+    public ResponObject<List<WardDto>> getAll() {
         List<WardDto> wardDtos = reponsitory.getAllWard();
         if (CollectionUtils.isEmpty(wardDtos)) {
             return new ResponObject<>("Get All Ward Failed", "BAD REQUEST", 400);
@@ -134,8 +140,5 @@ public class WardServiceImpl extends GenericServiceImpl<Ward, UUID> implements W
         return new ResponObject<>("Get All Ward Successful", "OK", 200, wardDtos);
     }
 
-    @Override
-    public Boolean deleteCheckById(UUID id) {
-        return null;
-    }
+
 }

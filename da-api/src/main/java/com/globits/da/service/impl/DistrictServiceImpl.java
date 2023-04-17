@@ -45,7 +45,7 @@ public class DistrictServiceImpl extends GenericServiceImpl<District, UUID> impl
     }
 
     @Override
-    public ResponObject<DistrictDto> save(DistrictDto dto) {
+    public ResponObject<DistrictDto> add(DistrictDto dto) {
         if (dto == null) {
             return new ResponObject<>("Not Found", "BAD REQUEST", 400);
         }
@@ -66,17 +66,50 @@ public class DistrictServiceImpl extends GenericServiceImpl<District, UUID> impl
                 ward.setPopulation(wardDto.getPopulation());
 
                 ward.setDistrict(entity);
-
                 wards.add(ward);
             }
 
             entity.setWards(wards);
         }
         if (entity != null) {
-            entity = reponsitory.save(entity);
-
+            reponsitory.save(entity);
         }
         return new ResponObject<>("Add District Ok", "OK", 200, dto);
+    }
+
+    @Override
+    public ResponObject<DistrictDto> update(UUID id, DistrictDto dto) {
+        if (dto != null) {
+            District entity = null;
+            entity = reponsitory.findById(id).get();
+
+            if (entity == null) {
+                return new ResponObject<>("District is not exist", "BAD REQUEST", 400);
+            }
+
+            entity.setCode(dto.getCode());
+            entity.setName(dto.getName());
+            entity.setArea(dto.getArea());
+            entity.setPopulation(dto.getPopulation());
+
+            List<WardDto> wardDtoList = dto.getWards();
+            List<Ward> wards = new ArrayList<>();
+
+            for (WardDto wardDto : wardDtoList) {
+                Ward ward = wardReponsitory.findById(wardDto.getId()).get();
+                ward.setCode(wardDto.getCode());
+                ward.setName(wardDto.getName());
+                ward.setPopulation(wardDto.getPopulation());
+                ward.setArea(wardDto.getArea());
+
+                wards.add(ward);
+            }
+            entity.setWards(wards);
+
+            reponsitory.save(entity);
+        }
+
+        return new ResponObject<>("Update Successful", "OK", 200, dto);
     }
 
     @Override
@@ -92,11 +125,6 @@ public class DistrictServiceImpl extends GenericServiceImpl<District, UUID> impl
         }
 
         return new ResponObject<>("Delete Failed", "BAD REQUEST", 400, false);
-    }
-
-    @Override
-    public ResponObject<DistrictDto> getCertificate(UUID id) {
-        return null;
     }
 
     @Override
@@ -148,18 +176,12 @@ public class DistrictServiceImpl extends GenericServiceImpl<District, UUID> impl
     }
 
     @Override
-    public ResponObject<Boolean> checkCode(UUID id, String code) {
-        return null;
-    }
-
-    @Override
     public ResponObject<List<DistrictDto>> getAll() {
-        return (ResponObject<List<DistrictDto>>) reponsitory.getAllDistrict();
-    }
-
-    @Override
-    public ResponObject<Boolean> deleteCheckById(UUID id) {
-        return null;
+        List<DistrictDto> districtDtoList = reponsitory.getAllDistrict();
+        if (CollectionUtils.isEmpty(districtDtoList)) {
+            return new ResponObject<>("Not Find Province", "BAD REQUEST", 400);
+        }
+        return new ResponObject<>("Get All Successful", "OK", 200, districtDtoList);
     }
 
     @Override
@@ -183,44 +205,9 @@ public class DistrictServiceImpl extends GenericServiceImpl<District, UUID> impl
             if (entity == null) {
                 return new ResponObject<>("ProvinceId is blank", "Bad Request", 400, dto);
             }
-            entity = reponsitory.save(entity);
-        }
-        return new ResponObject<>("Add District Successfuly", "OK", 200, dto);
-    }
-
-    @Override
-    public ResponObject<DistrictDto> update(UUID id, DistrictDto dto) {
-        if (dto != null) {
-            District entity = null;
-            entity = reponsitory.findById(id).get();
-
-            if (entity == null) {
-                return new ResponObject<>("District is not exist", "BAD REQUEST", 400);
-            }
-
-            entity.setCode(dto.getCode());
-            entity.setName(dto.getName());
-            entity.setArea(dto.getArea());
-            entity.setPopulation(dto.getPopulation());
-
-            List<WardDto> wardDtoList = dto.getWards();
-            List<Ward> wards = new ArrayList<>();
-
-            for (WardDto wardDto : wardDtoList) {
-                Ward ward = wardReponsitory.findById(wardDto.getId()).get();
-                ward.setCode(wardDto.getCode());
-                ward.setName(wardDto.getName());
-                ward.setPopulation(wardDto.getPopulation());
-                ward.setArea(wardDto.getArea());
-
-                wards.add(ward);
-            }
-            entity.setWards(wards);
-
             reponsitory.save(entity);
         }
-
-        return new ResponObject<>("Update Successful", "OK", 200, dto);
+        return new ResponObject<>("Add District Successfuly", "OK", 200, dto);
     }
 
     @Override

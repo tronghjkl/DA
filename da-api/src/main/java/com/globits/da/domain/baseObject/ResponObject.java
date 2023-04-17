@@ -2,21 +2,17 @@ package com.globits.da.domain.baseObject;
 
 import com.globits.da.dto.EmployeeDTO;
 
-public class ResponObject<T> {
+public class ResponObject<T>  {
     private String status;
     private String messager;
     private T data;
     private Boolean isValid;
-
     private int code;
-
     public ResponObject(T data) {
         this.data = data;
     }
-
     public ResponObject(EmployeeDTO result) {
     }
-
     public ResponObject(String messager) {
         this.messager = messager;
     }
@@ -86,7 +82,6 @@ public class ResponObject<T> {
     public int getCode() {
         return code;
     }
-
     public void setCode(int code) {
         this.code = code;
     }

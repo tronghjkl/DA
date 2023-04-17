@@ -38,74 +38,8 @@ public class ProvinceServiceImpl extends GenericServiceImpl<Province, UUID> impl
 
     @Override
     public Page<ProvinceDto> getPage(int pageSize, int pageIndex) {
-        return null;
-    }
-
-    @Override
-    public ProvinceDto saveOrUpdate(UUID id, ProvinceDto dto) {
-        if (dto != null) {
-            Province entity = null;
-            // update
-            if (dto.getId() != null) {
-                if (dto.getId() != null && !dto.getId().equals(id)) {
-                    return null;
-                }
-                entity = reponsitory.getOne(id);
-            }
-            if (entity == null) {
-                entity = new Province();
-            }
-
-            entity.setCode(dto.getCode());
-            entity.setName(dto.getName());
-            entity.setArea(dto.getArea());
-            entity.setPopulation(dto.getPopulation());
-            entity.setGDP(dto.getGdp());
-
-            if (dto.getDistricts() != null) {
-                List<District> districts = new ArrayList<>();
-                for (DistrictDto districtDto : dto.getDistricts()) {
-                    District district = new District();
-                    district.setName(districtDto.getName());
-                    district.setCode(districtDto.getCode());
-                    district.setArea(districtDto.getArea());
-                    district.setPopulation(districtDto.getPopulation());
-                    district.setGDP(districtDto.getGDP());
-                    district.setProvince(entity);
-
-                    districts.add(district);
-                }
-                entity.setDistricts(districts);
-            }
-
-
-            entity = reponsitory.save(entity);
-            if (entity != null) {
-                return new ProvinceDto(entity);
-            }
-        }
-        return null;
-    }
-
-
-    @Override
-    public ResponObject<Boolean> deleteKho(UUID id) {
-        if (id != null) {
-            Optional<Province> province = reponsitory.findById(id);
-            if (province.isPresent()) {
-                reponsitory.deleteById(id);
-                return new ResponObject<>("Delete Succesful", "OK", 200, true);
-            } else {
-                return new ResponObject<>("Not Found Province Need Delete", "BAD REQUEST", 400);
-            }
-
-        }
-        return new ResponObject<>("Input Id", "BAD REQUEST", 400, false);
-    }
-
-    @Override
-    public ProvinceDto getCertificate(UUID id) {
-        return null;
+        Pageable pageable = PageRequest.of(pageIndex - 1, pageSize);
+        return reponsitory.getListPage(pageable);
     }
 
     @Override
@@ -156,37 +90,15 @@ public class ProvinceServiceImpl extends GenericServiceImpl<Province, UUID> impl
         Page<ProvinceDto> result = new PageImpl<>(entities, pageable, count);
         return new ResponObject<>("Successfully", "OK", 200, result);
     }
-
     @Override
-    public Boolean checkCode(UUID id, String code) {
-        return null;
-    }
-
-    @Override
-    public ResponObject<List<ProvinceDto>> getAllProvince() {
-        List<ProvinceDto> provinceDtoList = reponsitory.getAllProvince();
-        if (CollectionUtils.isEmpty(provinceDtoList)) {
-            return new ResponObject<>("Not Find Province", "BAD REQUEST", 400);
-        }
-        return new ResponObject<>("Get All Successful", "OK", 200, provinceDtoList);
-    }
-
-    @Override
-    public Boolean deleteCheckById(UUID id) {
-        return null;
-    }
-
-    @Override
-    public ResponObject<ProvinceDto> updateProvince(UUID id, ProvinceDto dto) {
+    public ResponObject<ProvinceDto> update (UUID id, ProvinceDto dto) {
         if (dto == null) {
             return new ResponObject<>("ProvinceDto is blank", "Bad Request", 400);
         }
-
         Province entity = reponsitory.findById(id).orElse(null);
         if (entity == null) {
             return new ResponObject<>("ProvinceId is blank", "Bad Request", 400);
         }
-
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.getConfiguration().setPropertyCondition(Conditions.isNotNull());
         modelMapper.map(dto, entity);
@@ -209,7 +121,7 @@ public class ProvinceServiceImpl extends GenericServiceImpl<Province, UUID> impl
     }
 
     @Override
-    public ResponObject<ProvinceDto> addProvince(ProvinceDto dto) {
+    public ResponObject<ProvinceDto> add (ProvinceDto dto) {
 
         if (dto == null) {
             return new ResponObject<>("ProvinceDto is blank", "Bad Request", 400);
@@ -255,8 +167,30 @@ public class ProvinceServiceImpl extends GenericServiceImpl<Province, UUID> impl
         if (entity != null) {
             entity = reponsitory.save(entity);
         }
-        return new ResponObject<>("Update Successfuly", "OK", 200, new ProvinceDto(entity));
+        return new ResponObject<>("Add Successfuly", "OK", 200, new ProvinceDto(entity));
     }
 
+    @Override
+    public ResponObject<Boolean> deleteKho(UUID id) {
+        if (id != null) {
+            Optional<Province> province = reponsitory.findById(id);
+            if (province.isPresent()) {
+                reponsitory.deleteById(id);
+                return new ResponObject<>("Delete Succesful", "OK", 200, true);
+            } else {
+                return new ResponObject<>("Not Found Province Need Delete", "BAD REQUEST", 400);
+            }
+        }
+        return new ResponObject<>("Input Id", "BAD REQUEST", 400, false);
+    }
+
+    @Override
+    public ResponObject<List<ProvinceDto>> getAll() {
+        List<ProvinceDto> provinceDtoList = reponsitory.getAllProvince();
+        if (CollectionUtils.isEmpty(provinceDtoList)) {
+            return new ResponObject<>("Not Find Province", "BAD REQUEST", 400);
+        }
+        return new ResponObject<>("Get All Successful", "OK", 200, provinceDtoList);
+    }
 
 }

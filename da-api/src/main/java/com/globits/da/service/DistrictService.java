@@ -15,19 +15,16 @@ import java.util.UUID;
 public interface DistrictService extends GenericService<District, UUID> {
     Page<DistrictDto> getPage(int pageSize, int pageIndex);
 
-    ResponObject<DistrictDto> save( DistrictDto dto);
+    ResponObject<DistrictDto> add( DistrictDto dto);
 
     ResponObject<Boolean> deleteKho(UUID id);
 
-    ResponObject<DistrictDto> getCertificate(UUID id);
 
     Page<DistrictDto> searchByPage(DistrictSearchDto dto);
 
-    ResponObject<Boolean> checkCode(UUID id, String code);
 
     ResponObject<List<DistrictDto>> getAll();
 
-    ResponObject<Boolean> deleteCheckById(UUID id);
 
     ResponObject<DistrictDto> saveWithProvinceId( DistrictDto dto);
 

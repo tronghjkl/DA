@@ -50,24 +50,24 @@ public class RestEmployeeController {
     @Secured({AFFakeConstants.ROLE_ADMIN, AFFakeConstants.ROLE_SUPER_ADMIN})
     @RequestMapping(value = "/get-all-employee", method = RequestMethod.GET)
     public ResponObject<List<EmployeeDTO>> getAllEmployee() {
-        return employeeService.getAllEmployee();
+        return employeeService.getAll();
     }
 
     @Secured({AFFakeConstants.ROLE_ADMIN, AFFakeConstants.ROLE_SUPER_ADMIN})
     @RequestMapping(value = "/search-employee", method = RequestMethod.POST)
     public ResponObject<Page<EmployeeDTO>> searchByPage(@RequestBody EmployeeSearchDTO employeeSearchDTO) {
-        return employeeService.searchEmployee(employeeSearchDTO);
+        return employeeService.searchByPage(employeeSearchDTO);
     }
 
     @Secured({AFFakeConstants.ROLE_ADMIN, AFFakeConstants.ROLE_SUPER_ADMIN})
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    public ResponObject<Boolean> delete(@PathVariable UUID id) {
-        return employeeService.deleteEmpployee(id);
+    public ResponObject<Boolean> deleteEmployee(@PathVariable UUID id) {
+        return employeeService.deleteKho(id);
     }
 
     @RequestMapping(value = "/export-employee", method = RequestMethod.GET)
     public ResponObject<byte[]> exportEmployees2(@RequestParam String fileName) throws IOException {
-        List<EmployeeDTO> result = (List<EmployeeDTO>) employeeService.getAllEmployee();
+        List<EmployeeDTO> result = (List<EmployeeDTO>) employeeService.getAll();
 
         excelService.export(result, fileName);
 
@@ -79,13 +79,13 @@ public class RestEmployeeController {
     @Secured({AFFakeConstants.ROLE_ADMIN, AFFakeConstants.ROLE_SUPER_ADMIN})
     @RequestMapping(value = "/add-employee", method = RequestMethod.POST)
     public ResponObject<EmployeeDTO> addEmployee(@RequestBody EmployeeDTO dto) {
-        return employeeService.addEmployee(dto);
+        return employeeService.add(dto);
     }
 
 
     @Secured({AFFakeConstants.ROLE_ADMIN, AFFakeConstants.ROLE_SUPER_ADMIN})
     @RequestMapping(value = "/update/{id}", method = RequestMethod.PUT)
-    public ResponObject<EmployeeDTO> update(@PathVariable UUID id, @RequestBody EmployeeDTO dto) {
+    public ResponObject<EmployeeDTO> updateEmployee(@PathVariable UUID id, @RequestBody EmployeeDTO dto) {
         return employeeService.update(id, dto);
     }
 
@@ -93,5 +93,4 @@ public class RestEmployeeController {
     public ResponObject<List<EmployeeDTO>> uploadFile(@RequestParam("file") MultipartFile file) throws IOException {
         return excelService.readExcelData(file);
     }
-
 }

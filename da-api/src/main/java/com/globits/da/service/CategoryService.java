@@ -1,16 +1,14 @@
 package com.globits.da.service;
 
-import java.util.List;
-import java.util.UUID;
-
-import org.springframework.data.domain.Page;
-import org.springframework.stereotype.Service;
-
 import com.globits.core.service.GenericService;
 import com.globits.da.domain.Category;
 import com.globits.da.dto.CategoryDto;
 import com.globits.da.dto.search.SearchDto;
-@Service
+import org.springframework.data.domain.Page;
+
+import java.util.List;
+import java.util.UUID;
+
 public interface CategoryService extends GenericService<Category, UUID>{
 	public Page<CategoryDto> getPage(int pageSize, int pageIndex);
 	public CategoryDto saveOrUpdate(UUID id,CategoryDto dto);

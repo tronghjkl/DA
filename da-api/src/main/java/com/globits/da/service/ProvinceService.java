@@ -15,21 +15,16 @@ import java.util.UUID;
 public interface ProvinceService extends GenericService<Province, UUID> {
     Page<ProvinceDto> getPage(int pageSize, int pageIndex);
 
-    ProvinceDto saveOrUpdate(UUID id, ProvinceDto dto);
-
     ResponObject<Boolean> deleteKho(UUID id);
 
-    ProvinceDto getCertificate(UUID id);
 
     ResponObject<Page<ProvinceDto>> searchByPage(ProvinceSearchDto dto);
 
-    Boolean checkCode(UUID id, String code);
 
-    ResponObject<List<ProvinceDto>> getAllProvince();
+    ResponObject<List<ProvinceDto>> getAll();
 
-    Boolean deleteCheckById(UUID id);
 
-    ResponObject<ProvinceDto> updateProvince(UUID id, ProvinceDto dto);
+    ResponObject<ProvinceDto> update(UUID id, ProvinceDto dto);
 
-    ResponObject<ProvinceDto> addProvince( ProvinceDto dto);
+    ResponObject<ProvinceDto> add( ProvinceDto dto);
 }

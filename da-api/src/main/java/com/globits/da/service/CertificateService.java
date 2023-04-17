@@ -15,17 +15,15 @@ import java.util.UUID;
 public interface CertificateService extends GenericService<Certificate, UUID> {
     public Page<CertificateDto> getPage(int pageSize, int pageIndex);
 
-    public ResponObject<CertificateDto> saveOrUpdate(UUID id, CertificateDto dto);
-
+    public ResponObject<CertificateDto> update(UUID id, CertificateDto dto);
+    public ResponObject<CertificateDto> add(CertificateDto dto);
     public ResponObject<Boolean> deleteKho(UUID id);
 
-    public CertificateDto getCertificate(UUID id);
 
     ResponObject<Page<CertificateDto>> searchByPage(CertificateSearchDto dto);
 
-    Boolean checkCode(UUID id, String code);
 
     public ResponObject<List<CertificateDto>> getAllCertificate();
 
-    public Boolean deleteCheckById(UUID id);
+
 }

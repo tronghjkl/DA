@@ -2,9 +2,9 @@ package com.globits.da.service.impl;
 
 import com.globits.core.service.impl.GenericServiceImpl;
 import com.globits.da.domain.Certificate;
+import com.globits.da.domain.baseObject.ResponObject;
 import com.globits.da.dto.CertificateDto;
 import com.globits.da.dto.search.CertificateSearchDto;
-import com.globits.da.domain.baseObject.ResponObject;
 import com.globits.da.repository.CertificateReponsitory;
 import com.globits.da.service.CertificateService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +17,7 @@ import org.springframework.util.StringUtils;
 
 import javax.persistence.Query;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -31,44 +32,52 @@ public class CertificateServiceImpl extends GenericServiceImpl<Certificate, UUID
     }
 
     @Override
-    public ResponObject<CertificateDto> saveOrUpdate(UUID id, CertificateDto dto) {
-        if (dto != null) {
-            Certificate entity = null;
-            if (dto.getId() != null) {
-                if (dto.getId() != null && !dto.getId().equals(id)) {
-                    return null;
-                }
-                entity = reponsitory.getOne(dto.getId());
-            }
-            if (entity == null) {
-                entity = new Certificate();
-            }
-            entity.setCode(dto.getCode());
-            entity.setName(dto.getName());
-//            entity.setStartDate(dto.getStartDate());
-//            entity.setEndDate(dto.getEndDate());
-
-            entity = reponsitory.save(entity);
-            if (entity != null) {
-                return new ResponObject<CertificateDto>("Add Certificate Successfuly", "OK", 200, dto);
-            }
+    public ResponObject<CertificateDto> add(CertificateDto dto) {
+        if (dto == null) {
+            return new ResponObject<>("ProvinceDto is blank", "Bad Request", 400);
         }
-        return new ResponObject<CertificateDto>("Add Certificate Failed", "BAD REQUEST", 400);
+        Certificate entity = new Certificate();
+
+        entity.setCode(dto.getCode());
+        entity.setName(dto.getName());
+
+        reponsitory.save(entity);
+
+        return new ResponObject<>("Add Certificate Failed", "BAD REQUEST", 400);
+    }
+
+    public ResponObject<CertificateDto> update(UUID id, CertificateDto dto) {
+        if (dto == null) {
+            return new ResponObject<>("ProvinceDto is blank", "Bad Request", 400);
+        }
+        Certificate entity = reponsitory.findById(id).orElse(null);
+        if (entity == null) {
+            return new ResponObject<>("ProvinceId is blank", "Bad Request", 400);
+        }
+        entity.setCode(dto.getCode());
+        entity.setName(dto.getName());
+
+        entity = reponsitory.save(entity);
+        if (entity != null) {
+            return new ResponObject<>("Add Certificate Successfuly", "OK", 200, dto);
+        }
+        return new ResponObject<>("Add Certificate Failed", "BAD REQUEST", 400);
     }
 
     @Override
     public ResponObject<Boolean> deleteKho(UUID id) {
         if (id != null) {
-            reponsitory.deleteById(id);
-            return new ResponObject<>(true);
+            Optional<Certificate> certificate = reponsitory.findById(id);
+            if (certificate.isPresent()) {
+                reponsitory.deleteById(id);
+                return new ResponObject<>("Delete Succesful", "OK", 200, true);
+            } else {
+                return new ResponObject<>("Not Found Province Need Delete", "BAD REQUEST", 400);
+            }
         }
-        return new ResponObject<>(false);
+        return new ResponObject<>("Input Id", "BAD REQUEST", 400, false);
     }
 
-    @Override
-    public CertificateDto getCertificate(UUID id) {
-        return null;
-    }
 
     @Override
     public ResponObject<Page<CertificateDto>> searchByPage(CertificateSearchDto dto) {
@@ -119,18 +128,9 @@ public class CertificateServiceImpl extends GenericServiceImpl<Certificate, UUID
     }
 
     @Override
-    public Boolean checkCode(UUID id, String code) {
-        return null;
-    }
-
-    @Override
     public ResponObject<List<CertificateDto>> getAllCertificate() {
         List<CertificateDto> listCertificate = reponsitory.getAllCertificate();
         return new ResponObject<>(listCertificate);
     }
 
-    @Override
-    public Boolean deleteCheckById(UUID id) {
-        return null;
-    }
 }

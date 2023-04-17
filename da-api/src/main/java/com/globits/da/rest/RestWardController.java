@@ -24,20 +24,19 @@ public class RestWardController {
     @Secured({AFFakeConstants.ROLE_ADMIN, AFFakeConstants.ROLE_SUPER_ADMIN})
     @RequestMapping(value = "/get-all-ward", method = RequestMethod.GET)
     public ResponObject<List<WardDto>> getAllWard() {
-
-        return wardService.getAllWard();
+        return wardService.getAll();
     }
 
     @Secured({AFFakeConstants.ROLE_ADMIN, AFFakeConstants.ROLE_SUPER_ADMIN})
     @RequestMapping(value = "/add-ward", method = RequestMethod.POST)
     public ResponObject<WardDto> addWard(@RequestBody WardDto wardDto) {
-        return wardService.saveOrUpdate(null, wardDto);
+        return wardService.add(wardDto);
     }
 
     @Secured({AFFakeConstants.ROLE_ADMIN, AFFakeConstants.ROLE_SUPER_ADMIN})
     @RequestMapping(value = "/add-ward/{id}", method = RequestMethod.PUT)
     public ResponObject<WardDto> updateWard(@RequestBody WardDto wardDto, @PathVariable UUID id) {
-        return wardService.saveOrUpdate(id, wardDto);
+        return wardService.update(id, wardDto);
     }
 
     @Secured({AFFakeConstants.ROLE_ADMIN, AFFakeConstants.ROLE_SUPER_ADMIN})

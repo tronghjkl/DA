@@ -6,12 +6,9 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class MyFirstApiServiceImpl implements MyFirstApi {
-
-
     @Override
     public String randomString() {
         return RandomStringUtils.randomAlphanumeric(10).toUpperCase();
     }
-
 
 }

@@ -30,13 +30,13 @@ public class RestCertificateController {
     @Secured({AFFakeConstants.ROLE_ADMIN, AFFakeConstants.ROLE_SUPER_ADMIN})
     @RequestMapping(value = "/add-certicate", method = RequestMethod.POST)
     public ResponObject<CertificateDto> addCertificate(@RequestBody CertificateDto certificateDto) {
-        return certificateService.saveOrUpdate(null, certificateDto);
+        return certificateService.add( certificateDto);
     }
 
     @Secured({AFFakeConstants.ROLE_ADMIN, AFFakeConstants.ROLE_SUPER_ADMIN})
     @RequestMapping(value = "/add-certificate/{id}", method = RequestMethod.PUT)
     public ResponObject<CertificateDto> updateCertificate(@RequestBody CertificateDto certificateDto, @PathVariable UUID id) {
-        return certificateService.saveOrUpdate(id, certificateDto);
+        return certificateService.update(id, certificateDto);
     }
 
     @Secured({AFFakeConstants.ROLE_ADMIN, AFFakeConstants.ROLE_SUPER_ADMIN})

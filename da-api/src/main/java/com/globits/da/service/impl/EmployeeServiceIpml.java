@@ -31,10 +31,8 @@ import java.util.UUID;
 
 @Service
 public class EmployeeServiceIpml extends GenericServiceImpl<Employee, UUID> implements EmployeeService {
-
     @Autowired
     EmployeeRepository employeeRepository;
-
     @Autowired
     ProvinceReponsitory provinceReponsitory;
     @Autowired
@@ -52,28 +50,7 @@ public class EmployeeServiceIpml extends GenericServiceImpl<Employee, UUID> impl
     }
 
     @Override
-    public ResponObject<EmployeeDTO> save(EmployeeDTO dto) {
-        if (dto == null) {
-            return null;
-        }
-        Employee entity = new Employee();
-
-        entity.setCode(dto.getCode());
-        entity.setName(dto.getName());
-        entity.setEmail(dto.getEmail());
-        entity.setPhone(dto.getPhone());
-        entity.setAge(dto.getAge());
-
-        if (entity == null) {
-            return new ResponObject<>("Add Employee Failed", "BAD REQUEST", 400);
-        }
-        employeeRepository.save(entity);
-
-        return new ResponObject<>("Add Employee Successful", "OK", 200, dto);
-    }
-
-    @Override
-    public ResponObject<List<EmployeeDTO>> getAllEmployee() {
+    public ResponObject<List<EmployeeDTO>> getAll() {
         List<EmployeeDTO> listEmployee = employeeRepository.getAllEmployee();
         if (CollectionUtils.isEmpty(listEmployee)) {
             return new ResponObject<>("Not Found Employee", "BAD REQUEST", 400);
@@ -82,7 +59,7 @@ public class EmployeeServiceIpml extends GenericServiceImpl<Employee, UUID> impl
     }
 
     @Override
-    public ResponObject<Page<EmployeeDTO>> searchEmployee(EmployeeSearchDTO dto) {
+    public ResponObject<Page<EmployeeDTO>> searchByPage(EmployeeSearchDTO dto) {
         if (dto.getKeyword() == null) {
             return new ResponObject<>("Input keyword", "BAD REQUEST", 400);
         }
@@ -130,21 +107,19 @@ public class EmployeeServiceIpml extends GenericServiceImpl<Employee, UUID> impl
     }
 
     @Override
-    public ResponObject<Boolean> deleteEmpployee(UUID id) {
+    public ResponObject<Boolean> deleteKho(UUID id) {
         if (id != null) {
             if (employeeRepository.findById(id).isPresent()) {
                 employeeRepository.deleteById(id);
                 return new ResponObject<>("Delete Successful", "OK", 200, true);
-            } else return new ResponObject<>("Not Found Employee Need Delete", "BAD REQUEST", 400, false);
-
+            }
+            else return new ResponObject<>("Not Found Employee Need Delete", "BAD REQUEST", 400, false);
         }
         return new ResponObject<>("Input Id", "BAD REQUEST", 400, false);
     }
-
-
     // V2
     @Override
-    public ResponObject<EmployeeDTO> addEmployee(EmployeeDTO dto) {
+    public ResponObject<EmployeeDTO> add(EmployeeDTO dto) {
         ResponObject<EmployeeDTO> result = validate.validateEmployee(dto);
         if (!result.getValid()) {
             return new ResponObject<>("Add Employee Failed", "BAD REQUEST", 400);
