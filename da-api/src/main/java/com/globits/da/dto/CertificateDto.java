@@ -10,10 +10,7 @@ public class CertificateDto extends BaseObjectDto {
     private String name;
 
     private String code;
-//
-//    private LocalDate startDate;
-//
-//    private LocalDate endDate;
+
 
     private UUID provinceId;
 
@@ -41,21 +38,6 @@ public class CertificateDto extends BaseObjectDto {
         this.code = code;
     }
 
-//    public LocalDate getStartDate() {
-//        return startDate;
-//    }
-//
-//    public void setStartDate(LocalDate startDate) {
-//        this.startDate = startDate;
-//    }
-//
-//    public LocalDate getEndDate() {
-//        return endDate;
-//    }
-//
-//    public void setEndDate(LocalDate endDate) {
-//        this.endDate = endDate;
-//    }
 
     public CertificateDto() {
         super();
@@ -66,8 +48,7 @@ public class CertificateDto extends BaseObjectDto {
             this.setId(certificate.getId());
             this.name = certificate.getName();
             this.code = certificate.getCode();
-//            this.startDate = certificate.getStartDate();
-//            this.endDate = certificate.getEndDate();
+
         }
     }
 }

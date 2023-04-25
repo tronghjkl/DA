@@ -4,7 +4,7 @@ import com.globits.da.AFFakeConstants;
 import com.globits.da.domain.baseObject.ResponObject;
 import com.globits.da.dto.WardDto;
 import com.globits.da.dto.search.WardSearchDto;
-import com.globits.da.service.impl.WardServiceImpl;
+import com.globits.da.service.WardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.security.access.annotation.Secured;
@@ -19,34 +19,34 @@ import java.util.UUID;
 @XmlRootElement
 public class RestWardController {
     @Autowired
-    WardServiceImpl wardService;
+    WardService wardService;
 
     @Secured({AFFakeConstants.ROLE_ADMIN, AFFakeConstants.ROLE_SUPER_ADMIN})
-    @RequestMapping(value = "/get-all-ward", method = RequestMethod.GET)
+    @GetMapping(value = "/get-all-ward")
     public ResponObject<List<WardDto>> getAllWard() {
         return wardService.getAll();
     }
 
     @Secured({AFFakeConstants.ROLE_ADMIN, AFFakeConstants.ROLE_SUPER_ADMIN})
-    @RequestMapping(value = "/add-ward", method = RequestMethod.POST)
+    @PostMapping(value = "/add-ward")
     public ResponObject<WardDto> addWard(@RequestBody WardDto wardDto) {
         return wardService.add(wardDto);
     }
 
     @Secured({AFFakeConstants.ROLE_ADMIN, AFFakeConstants.ROLE_SUPER_ADMIN})
-    @RequestMapping(value = "/add-ward/{id}", method = RequestMethod.PUT)
+    @PutMapping(value = "/add-ward/{id}")
     public ResponObject<WardDto> updateWard(@RequestBody WardDto wardDto, @PathVariable UUID id) {
         return wardService.update(id, wardDto);
     }
 
     @Secured({AFFakeConstants.ROLE_ADMIN, AFFakeConstants.ROLE_SUPER_ADMIN})
-    @RequestMapping(value = "/search-ward", method = RequestMethod.POST)
+    @PostMapping(value = "/search-ward")
     public ResponObject<Page<WardDto>> searchWard(@RequestBody WardSearchDto wardSearchDto) {
         return wardService.searchByPage(wardSearchDto);
     }
 
     @Secured({AFFakeConstants.ROLE_ADMIN, AFFakeConstants.ROLE_SUPER_ADMIN})
-    @RequestMapping(value = "/delete-ward/{id}", method = RequestMethod.DELETE)
+    @DeleteMapping(value = "/delete-ward/{id}")
     public ResponObject<Boolean> delete(@PathVariable UUID id) {
         return wardService.deleteKho(id);
     }

@@ -13,17 +13,17 @@ import java.util.UUID;
 
 @Service
 public interface CertificateService extends GenericService<Certificate, UUID> {
-    public Page<CertificateDto> getPage(int pageSize, int pageIndex);
+    Page<CertificateDto> getPage(int pageSize, int pageIndex);
 
-    public ResponObject<CertificateDto> update(UUID id, CertificateDto dto);
-    public ResponObject<CertificateDto> add(CertificateDto dto);
-    public ResponObject<Boolean> deleteKho(UUID id);
+    ResponObject<CertificateDto> update(UUID id, CertificateDto dto);
 
+    ResponObject<CertificateDto> add(CertificateDto dto);
+
+    ResponObject<Boolean> deleteKho(UUID id);
 
     ResponObject<Page<CertificateDto>> searchByPage(CertificateSearchDto dto);
 
-
-    public ResponObject<List<CertificateDto>> getAllCertificate();
+    ResponObject<List<CertificateDto>> getAllCertificate();
 
 
 }

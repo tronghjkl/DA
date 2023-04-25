@@ -90,8 +90,9 @@ public class ProvinceServiceImpl extends GenericServiceImpl<Province, UUID> impl
         Page<ProvinceDto> result = new PageImpl<>(entities, pageable, count);
         return new ResponObject<>("Successfully", "OK", 200, result);
     }
+
     @Override
-    public ResponObject<ProvinceDto> update (UUID id, ProvinceDto dto) {
+    public ResponObject<ProvinceDto> update(UUID id, ProvinceDto dto) {
         if (dto == null) {
             return new ResponObject<>("ProvinceDto is blank", "Bad Request", 400);
         }
@@ -114,14 +115,12 @@ public class ProvinceServiceImpl extends GenericServiceImpl<Province, UUID> impl
             }
             entity.setDistricts(districts);
         }
-        if (entity != null) {
-            reponsitory.save(entity);
-        }
-        return new ResponObject<>("Update Successfuly", "OK", 200, dto);
+        reponsitory.save(entity);
+        return new ResponObject<>("Update Successfuly", "OK", 200, new ProvinceDto(entity));
     }
 
     @Override
-    public ResponObject<ProvinceDto> add (ProvinceDto dto) {
+    public ResponObject<ProvinceDto> add(ProvinceDto dto) {
 
         if (dto == null) {
             return new ResponObject<>("ProvinceDto is blank", "Bad Request", 400);
@@ -172,16 +171,16 @@ public class ProvinceServiceImpl extends GenericServiceImpl<Province, UUID> impl
 
     @Override
     public ResponObject<Boolean> deleteKho(UUID id) {
-        if (id != null) {
-            Optional<Province> province = reponsitory.findById(id);
-            if (province.isPresent()) {
-                reponsitory.deleteById(id);
-                return new ResponObject<>("Delete Succesful", "OK", 200, true);
-            } else {
-                return new ResponObject<>("Not Found Province Need Delete", "BAD REQUEST", 400);
-            }
+        if (id == null) {
+            return new ResponObject<>("Input Id", "BAD REQUEST", 400, false);
         }
-        return new ResponObject<>("Input Id", "BAD REQUEST", 400, false);
+        Optional<Province> province = reponsitory.findById(id);
+        if (province.isPresent()) {
+            reponsitory.deleteById(id);
+            return new ResponObject<>("Delete Succesful", "OK", 200, true);
+        } else
+            return new ResponObject<>("Not Found Province Need Delete", "BAD REQUEST", 400);
+
     }
 
     @Override

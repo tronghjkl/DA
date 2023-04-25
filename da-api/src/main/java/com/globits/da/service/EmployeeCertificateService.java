@@ -11,7 +11,7 @@ import java.util.UUID;
 @Service
 public interface EmployeeCertificateService extends GenericService<EmployeeCertificate, UUID> {
 
-    public ResponObject<EmployeeCertificateDto> save(EmployeeCertificateDto dto);
+    ResponObject<EmployeeCertificateDto> save(EmployeeCertificateDto dto);
 
 
 }

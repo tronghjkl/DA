@@ -5,7 +5,7 @@ import com.globits.da.domain.baseObject.ResponObject;
 import com.globits.da.dto.EmployeeDTO;
 import com.globits.da.dto.search.EmployeeSearchDTO;
 import com.globits.da.service.EmployeeService;
-import com.globits.da.service.impl.ExcelServiceImpl;
+import com.globits.da.service.ExcelService;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -26,13 +26,11 @@ import java.util.UUID;
 public class RestEmployeeController {
     @Autowired
     EmployeeService employeeService;
-
     @Autowired
-    ExcelServiceImpl excelService;
-
+    ExcelService excelService;
 
     @Secured({AFFakeConstants.ROLE_ADMIN, AFFakeConstants.ROLE_SUPER_ADMIN})
-    @RequestMapping(value = "/{pageIndex}/{pageSize}", method = RequestMethod.GET)
+    @GetMapping(value = "/{pageIndex}/{pageSize}")
     public ResponseEntity<Page<EmployeeDTO>> getpage(@PathVariable int pageIndex, @PathVariable int pageSize) {
         Page<EmployeeDTO> results = employeeService.getPage(pageSize, pageIndex);
         if (results.isEmpty()) {
@@ -42,49 +40,46 @@ public class RestEmployeeController {
     }
 
     @Secured({AFFakeConstants.ROLE_ADMIN, AFFakeConstants.ROLE_SUPER_ADMIN})
-    @RequestMapping(value = "/save", method = RequestMethod.POST)
+    @PostMapping(value = "/save")
     public ResponObject<EmployeeDTO> save(@RequestBody @Valid EmployeeDTO dto) {
         return employeeService.addEmployeeWithAddress(dto);
     }
 
     @Secured({AFFakeConstants.ROLE_ADMIN, AFFakeConstants.ROLE_SUPER_ADMIN})
-    @RequestMapping(value = "/get-all-employee", method = RequestMethod.GET)
+    @GetMapping(value = "/get-all-employee")
     public ResponObject<List<EmployeeDTO>> getAllEmployee() {
         return employeeService.getAll();
     }
 
     @Secured({AFFakeConstants.ROLE_ADMIN, AFFakeConstants.ROLE_SUPER_ADMIN})
-    @RequestMapping(value = "/search-employee", method = RequestMethod.POST)
+    @GetMapping(value = "/search-employee")
     public ResponObject<Page<EmployeeDTO>> searchByPage(@RequestBody EmployeeSearchDTO employeeSearchDTO) {
         return employeeService.searchByPage(employeeSearchDTO);
     }
 
     @Secured({AFFakeConstants.ROLE_ADMIN, AFFakeConstants.ROLE_SUPER_ADMIN})
-    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+    @DeleteMapping(value = "/{id}")
     public ResponObject<Boolean> deleteEmployee(@PathVariable UUID id) {
         return employeeService.deleteKho(id);
     }
 
-    @RequestMapping(value = "/export-employee", method = RequestMethod.GET)
+    @GetMapping(value = "/export-employee")
     public ResponObject<byte[]> exportEmployees2(@RequestParam String fileName) throws IOException {
         List<EmployeeDTO> result = (List<EmployeeDTO>) employeeService.getAll();
-
         excelService.export(result, fileName);
-
         byte[] bytes = FileUtils.readFileToByteArray(new File(fileName));
-
         return new ResponObject<>("export succesfully", bytes);
     }
 
     @Secured({AFFakeConstants.ROLE_ADMIN, AFFakeConstants.ROLE_SUPER_ADMIN})
-    @RequestMapping(value = "/add-employee", method = RequestMethod.POST)
+    @PostMapping(value = "/add-employee")
     public ResponObject<EmployeeDTO> addEmployee(@RequestBody EmployeeDTO dto) {
         return employeeService.add(dto);
     }
 
 
     @Secured({AFFakeConstants.ROLE_ADMIN, AFFakeConstants.ROLE_SUPER_ADMIN})
-    @RequestMapping(value = "/update/{id}", method = RequestMethod.PUT)
+    @PutMapping(value = "/update/{id}")
     public ResponObject<EmployeeDTO> updateEmployee(@PathVariable UUID id, @RequestBody EmployeeDTO dto) {
         return employeeService.update(id, dto);
     }

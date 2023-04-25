@@ -43,7 +43,7 @@ public class CertificateServiceImpl extends GenericServiceImpl<Certificate, UUID
 
         reponsitory.save(entity);
 
-        return new ResponObject<>("Add Certificate Failed", "BAD REQUEST", 400);
+        return new ResponObject<>("Add Certificate Successful", "OK", 200, new CertificateDto(entity));
     }
 
     public ResponObject<CertificateDto> update(UUID id, CertificateDto dto) {
@@ -59,7 +59,7 @@ public class CertificateServiceImpl extends GenericServiceImpl<Certificate, UUID
 
         entity = reponsitory.save(entity);
         if (entity != null) {
-            return new ResponObject<>("Add Certificate Successfuly", "OK", 200, dto);
+            return new ResponObject<>("Add Certificate Successfuly", "OK", 200, new CertificateDto(entity));
         }
         return new ResponObject<>("Add Certificate Failed", "BAD REQUEST", 400);
     }

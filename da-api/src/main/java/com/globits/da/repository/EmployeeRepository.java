@@ -22,11 +22,6 @@ public interface EmployeeRepository extends JpaRepository<Employee, UUID> {
     @Query("select new com.globits.da.dto.EmployeeDTO(em) from Employee em")
     List<EmployeeDTO> getAllEmployee();
 
-    Employee findOneByCode(String code);
-
-//    @Query("select e from Employee e where e.code =?1")
-//    Employee getByCode(String code);
-
     @Query("select e FROM Employee e WHERE e.code = ?1")
     Employee getByCode(String code);
 }

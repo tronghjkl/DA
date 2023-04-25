@@ -19,33 +19,32 @@ public class RestProvinceController {
     @Autowired
     ProvinceService provinceService;
 
-
     @Secured({AFFakeConstants.ROLE_ADMIN, AFFakeConstants.ROLE_SUPER_ADMIN})
-    @RequestMapping(value = "/get-all-province", method = RequestMethod.GET)
+    @GetMapping(value = "/get-all-province")
     public ResponObject<List<ProvinceDto>> getALlProvince() {
         return provinceService.getAll();
     }
 
     @Secured({AFFakeConstants.ROLE_ADMIN, AFFakeConstants.ROLE_SUPER_ADMIN})
-    @RequestMapping(value = "/search-province", method = RequestMethod.POST)
+    @PostMapping(value = "/search-province")
     public ResponObject<Page<ProvinceDto>> searchProvince(@RequestBody ProvinceSearchDto provinceSearchDto) {
         return this.provinceService.searchByPage(provinceSearchDto);
     }
 
     @Secured({AFFakeConstants.ROLE_ADMIN, AFFakeConstants.ROLE_SUPER_ADMIN})
-    @RequestMapping(value = "/delete-province", method = RequestMethod.DELETE)
+    @DeleteMapping(value = "/delete-province")
     public ResponObject<Boolean> deleteProvince(@RequestParam UUID id) {
         return provinceService.deleteKho(id);
     }
 
     @Secured({AFFakeConstants.ROLE_ADMIN, AFFakeConstants.ROLE_SUPER_ADMIN})
-    @RequestMapping(value = "/add-province", method = RequestMethod.POST)
+    @PostMapping(value = "/add-province")
     public ResponObject<ProvinceDto> addProvince(@RequestBody ProvinceDto provinceDto) {
         return provinceService.add(provinceDto);
     }
 
     @Secured({AFFakeConstants.ROLE_ADMIN, AFFakeConstants.ROLE_SUPER_ADMIN})
-    @RequestMapping(value = "/add-province/{id}", method = RequestMethod.PUT)
+    @PutMapping(value = "/add-province/{id}")
     public ResponObject<ProvinceDto> updateProvince(@RequestBody ProvinceDto provinceDto, @PathVariable UUID id) {
         return provinceService.update(id, provinceDto);
     }

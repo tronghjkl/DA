@@ -22,5 +22,4 @@ public interface WardReponsitory extends JpaRepository<Ward, UUID> {
     @Query("select new com.globits.da.dto.WardDto(ed) from Ward ed")
     List<WardDto> getAllWard();
 
-    Ward findOneByCode(String code);
 }

@@ -19,12 +19,9 @@ public interface DistrictService extends GenericService<District, UUID> {
 
     ResponObject<Boolean> deleteKho(UUID id);
 
-
     Page<DistrictDto> searchByPage(DistrictSearchDto dto);
 
-
     ResponObject<List<DistrictDto>> getAll();
-
 
     ResponObject<DistrictDto> saveWithProvinceId( DistrictDto dto);
 

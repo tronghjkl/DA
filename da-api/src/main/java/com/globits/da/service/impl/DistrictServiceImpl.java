@@ -33,10 +33,8 @@ public class DistrictServiceImpl extends GenericServiceImpl<District, UUID> impl
     DistrictReponsitory reponsitory;
     @Autowired
     ProvinceReponsitory provinceReponsitory;
-
     @Autowired
     WardReponsitory wardReponsitory;
-
 
     @Override
     public Page<DistrictDto> getPage(int pageSize, int pageIndex) {
@@ -74,7 +72,7 @@ public class DistrictServiceImpl extends GenericServiceImpl<District, UUID> impl
         if (entity != null) {
             reponsitory.save(entity);
         }
-        return new ResponObject<>("Add District Ok", "OK", 200, dto);
+        return new ResponObject<>("Add District Ok", "OK", 200, new DistrictDto(entity));
     }
 
     @Override
@@ -107,7 +105,7 @@ public class DistrictServiceImpl extends GenericServiceImpl<District, UUID> impl
         entity.setWards(wards);
 
         reponsitory.save(entity);
-        return new ResponObject<>("Update Successful", "OK", 200, dto);
+        return new ResponObject<>("Update Successful", "OK", 200, new DistrictDto(entity));
     }
 
     @Override
@@ -191,7 +189,7 @@ public class DistrictServiceImpl extends GenericServiceImpl<District, UUID> impl
         District entity = new District();
         Optional<Province> province = provinceReponsitory.findById(dto.getProvinceId());
         if (!province.isPresent()) {
-            return new ResponObject<>("ProvinceId is blank", "Bad Request", 400, dto);
+            return new ResponObject<>("ProvinceId is blank", "Bad Request", 400);
         }
 
         entity.setCode(dto.getCode());
@@ -203,7 +201,7 @@ public class DistrictServiceImpl extends GenericServiceImpl<District, UUID> impl
 
         reponsitory.save(entity);
 
-        return new ResponObject<>("Add District Successfuly", "OK", 200, dto);
+        return new ResponObject<>("Add District Successfuly", "OK", 200, new DistrictDto(entity));
     }
 
     @Override

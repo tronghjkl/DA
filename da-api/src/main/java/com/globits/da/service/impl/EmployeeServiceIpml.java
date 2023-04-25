@@ -108,13 +108,14 @@ public class EmployeeServiceIpml extends GenericServiceImpl<Employee, UUID> impl
 
     @Override
     public ResponObject<Boolean> deleteKho(UUID id) {
-        if (id != null) {
-            if (employeeRepository.findById(id).isPresent()) {
-                employeeRepository.deleteById(id);
-                return new ResponObject<>("Delete Successful", "OK", 200, true);
-            } else return new ResponObject<>("Not Found Employee Need Delete", "BAD REQUEST", 400, false);
+        if (id == null) {
+            return new ResponObject<>("Input Id", "BAD REQUEST", 400, false);
         }
-        return new ResponObject<>("Input Id", "BAD REQUEST", 400, false);
+        if (employeeRepository.findById(id).isPresent()) {
+            employeeRepository.deleteById(id);
+            return new ResponObject<>("Delete Successful", "OK", 200, true);
+        } else return new ResponObject<>("Not Found Employee Need Delete", "BAD REQUEST", 400, false);
+
     }
 
     // V2
@@ -176,36 +177,30 @@ public class EmployeeServiceIpml extends GenericServiceImpl<Employee, UUID> impl
             return new ResponObject<>("Not found employee need update", "BAD REQUEST", 400);
         }
         if (!validate.existsByCode(dto.getCode())) {
-            if (validate.validateProvince(dto)) {
-                entity.setCode(dto.getCode());
-                entity.setName(dto.getName());
-                entity.setEmail(dto.getEmail());
-                entity.setPhone(dto.getPhone());
-                entity.setAge(dto.getAge());
-
-                Province province = provinceReponsitory.findById(dto.getProvinceId()).orElse(null);
-                District district = districtReponsitory.findById(dto.getDistrictId()).orElse(null);
-                Ward ward = wardReponsitory.findById(dto.getWardId()).orElse(null);
-
-                if (province != null && district != null && ward != null) {
-                    entity.setProvince(province);
-                    entity.setWard(ward);
-                    entity.setDistrict(district);
-                } else {
-                    return new ResponObject<>("missing data", "BAD REQUEST", 400);
-                }
-
-                employeeRepository.save(entity);
-
-            } else {
-                return new ResponObject<>("province, district, commune is not valid", "BAD REQUEST", 400);
-            }
-
-        } else {
             return new ResponObject<>("code is exist", "BAD REQUEST", 400);
         }
+        if (validate.validateProvince(dto)) {
+            return new ResponObject<>("province, district, commune is not valid", "BAD REQUEST", 400);
+        }
+        entity.setCode(dto.getCode());
+        entity.setName(dto.getName());
+        entity.setEmail(dto.getEmail());
+        entity.setPhone(dto.getPhone());
+        entity.setAge(dto.getAge());
 
-        return new ResponObject<>(ErrorCode.SUCCESS.getMessage(), new EmployeeDTO(entity));
+        Province province = provinceReponsitory.findById(dto.getProvinceId()).orElse(null);
+        District district = districtReponsitory.findById(dto.getDistrictId()).orElse(null);
+        Ward ward = wardReponsitory.findById(dto.getWardId()).orElse(null);
+
+        if (province != null && district != null && ward != null) {
+            return new ResponObject<>("missing data", "BAD REQUEST", 400);
+        }
+        entity.setProvince(province);
+        entity.setWard(ward);
+        entity.setDistrict(district);
+        employeeRepository.save(entity);
+
+        return new ResponObject<>(ErrorCode.SUCCESS.getMessage(), "OK", new EmployeeDTO(entity));
     }
 
 }

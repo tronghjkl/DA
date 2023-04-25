@@ -14,9 +14,6 @@ public interface EmployeeCertifcateResponsitory extends JpaRepository<EmployeeCe
     @Query("select ec from EmployeeCertificate ec where ec.employee.id =?1 and ec.province.id = ?2 and ec.certificate.id = ?3")
     List<EmployeeCertificateDto> checkCertificateProvince(UUID employeeId, UUID provinceId, UUID certificateId);
 
-//    @Query("select ec.endDate from EmployeeCertificate ec where ec.employee.id =?1 and ec.province.id = ?2 and ec.certificate.id = ?3")
-//    LocalDate getStillHasTime(UUID employeeId, UUID provinceId, UUID certificateId);
-
     @Query("select ec from EmployeeCertificate ec where ec.employee.id =?1  and ec.certificate.id = ?2")
     List<EmployeeCertificateDto> checkCertificate(UUID employeeId,UUID certificateId);
 }

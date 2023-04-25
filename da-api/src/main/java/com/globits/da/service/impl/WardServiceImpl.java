@@ -32,7 +32,7 @@ public class WardServiceImpl extends GenericServiceImpl<Ward, UUID> implements W
     }
 
     @Override
-    public ResponObject<WardDto> add( WardDto dto) {
+    public ResponObject<WardDto> add(WardDto dto) {
         if (dto == null) {
             return new ResponObject<>("Input Ward", "BAD REQUEST", 400);
         }
@@ -49,7 +49,7 @@ public class WardServiceImpl extends GenericServiceImpl<Ward, UUID> implements W
 
 
     @Override
-    public ResponObject<WardDto> update (UUID id, WardDto dto) {
+    public ResponObject<WardDto> update(UUID id, WardDto dto) {
         if (dto == null) {
             return new ResponObject<>("Input Ward", "BAD REQUEST", 400);
         }
@@ -71,14 +71,14 @@ public class WardServiceImpl extends GenericServiceImpl<Ward, UUID> implements W
 
     @Override
     public ResponObject<Boolean> deleteKho(UUID id) {
-        if (id != null) {
-            if (reponsitory.getOne(id) == null) {
-                return new ResponObject<>("Not Found Ward Need Delete", "BAD REQUEST", 400, false);
-            }
-            reponsitory.deleteById(id);
-            return new ResponObject<>("Delete Successful", "OK", 200, true);
+        if (id == null) {
+            return new ResponObject<>("Input WardId", "BAD REQUEST", 400, false);
         }
-        return new ResponObject<>("Input WardId", "BAD REQUEST", 400, false);
+        if (reponsitory.getOne(id) == null) {
+            return new ResponObject<>("Not Found Ward Need Delete", "BAD REQUEST", 400, false);
+        }
+        reponsitory.deleteById(id);
+        return new ResponObject<>("Delete Successful", "OK", 200, true);
     }
 
 

@@ -1,6 +1,5 @@
 package com.globits.da.repository;
 
-import com.globits.da.domain.Category;
 import com.globits.da.domain.Province;
 import com.globits.da.dto.ProvinceDto;
 import org.springframework.data.domain.Page;
@@ -22,9 +21,5 @@ public interface ProvinceReponsitory extends JpaRepository<Province, UUID> {
 
     @Query("select new com.globits.da.dto.ProvinceDto(ed) from Province ed")
     List<ProvinceDto> getAllProvince();
-
-    Category findOneByCode(String code);
-
-
 
 }

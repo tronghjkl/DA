@@ -22,6 +22,5 @@ public interface CategoryRepository extends JpaRepository<Category, UUID>{
 	@Query("select new com.globits.da.dto.CategoryDto(ed) from Category ed")
 	List<CategoryDto> getAllCategory();
 
-	Category findOneByCode(String code);
 	
 }

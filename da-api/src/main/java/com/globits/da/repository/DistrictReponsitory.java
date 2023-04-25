@@ -1,6 +1,5 @@
 package com.globits.da.repository;
 
-import com.globits.da.domain.Category;
 import com.globits.da.domain.District;
 import com.globits.da.dto.DistrictDto;
 import org.springframework.data.domain.Page;
@@ -23,7 +22,6 @@ public interface DistrictReponsitory extends JpaRepository<District, UUID> {
     @Query("select new com.globits.da.dto.DistrictDto(ed) from District ed")
     List<DistrictDto> getAllDistrict();
 
-    Category findOneByCode(String code);
 
     @Query("select new com.globits.da.dto.DistrictDto(ed) from District ed where ed.province.id = ?1")
     List<DistrictDto> getDistrictsByProvinceId(UUID id);

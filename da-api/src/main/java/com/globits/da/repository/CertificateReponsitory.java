@@ -21,5 +21,4 @@ public interface CertificateReponsitory extends JpaRepository<Certificate, UUID>
     @Query("select new com.globits.da.dto.CertificateDto(ed) from Certificate ed")
     List<CertificateDto> getAllCertificate();
 
-    Certificate findOneByCode(String code);
 }

@@ -89,18 +89,6 @@ public class DistrictDto extends BaseObjectDto {
     }
 
 
-//    public DistrictDto(District district) {
-//        if (district != null) {
-//            this.setId(district.getId());
-//            this.name = district.getName();
-//            this.code = district.getCode();
-//            this.population = district.getPopulation();
-//            this.area = district.getArea();
-//            this.GDP = district.getGDP();
-//            this.provinceId = district.getProvince().getId();
-//
-//        }
-//    }
 
     public DistrictDto(District district) {
         if (district != null) {

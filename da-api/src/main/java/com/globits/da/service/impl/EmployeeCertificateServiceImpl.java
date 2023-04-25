@@ -40,24 +40,23 @@ public class EmployeeCertificateServiceImpl extends GenericServiceImpl<EmployeeC
 
         List<EmployeeCertificateDto> employeeCertificateDtoList2 = responsitory.checkCertificate(dto.getEmployeeId(), dto.getCertificateId());
 
-        if (validateEmployeeCertificate(employeeCertificateDtoList) && validateCertificate(employeeCertificateDtoList2)) {
-            Employee employee = employeeRepository.findById(dto.getEmployeeId()).orElse(null);
-            Certificate certificate = certificateReponsitory.findById(dto.getCertificateId()).orElse(null);
-            Province province = provinceReponsitory.findById(dto.getProvinceId()).orElse(null);
+        if (!validateEmployeeCertificate(employeeCertificateDtoList) && !validateCertificate(employeeCertificateDtoList2)) {
+            return new ResponObject<>("Add Failed", "BAD REQUEST", 400);
+        }
+        Employee employee = employeeRepository.findById(dto.getEmployeeId()).orElse(null);
+        Certificate certificate = certificateReponsitory.findById(dto.getCertificateId()).orElse(null);
+        Province province = provinceReponsitory.findById(dto.getProvinceId()).orElse(null);
 
-            if (employee != null && certificate != null && province != null) {
-                entity.setEmployee(employee);
-                entity.setCertificate(certificate);
-                entity.setProvince(province);
-                entity.setStartDate(dto.getStartDate());
-                entity.setEndDate(dto.getEndDate());
+        if (employee == null && certificate == null && province == null) {
+            return new ResponObject<>("Add Failed", "BAD REQUEST", 400);
+        }
+        entity.setEmployee(employee);
+        entity.setCertificate(certificate);
+        entity.setProvince(province);
+        entity.setStartDate(dto.getStartDate());
+        entity.setEndDate(dto.getEndDate());
 
-                entity = responsitory.save(entity);
-            } else {
-                return new ResponObject<>("Add Failed", "BAD REQUEST", 400);
-            }
-
-        } else return new ResponObject<>("Add Failed", "BAD REQUEST", 400);
+        entity = responsitory.save(entity);
 
         return new ResponObject<>("Add successfuly", "OK", 200, new EmployeeCertificateDto(entity));
     }
